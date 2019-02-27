@@ -8,6 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-solid-svg-icons": "^5.7.2",
+    "@fortawesome/vue-fontawesome": "^0.1.5",
+    "firebase": "^5.8.4",
+    "i": "^0.3.6",
+    "npm": "^6.8.0",
     "register-service-worker": "^1.5.2",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
