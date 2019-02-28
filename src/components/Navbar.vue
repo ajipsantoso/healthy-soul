@@ -29,7 +29,7 @@
             </div>
         </li>
         <li class="nav-item">
-          <button @click="logout()" type="button" class="btn btn-primary">LOGOUT</button>
+          <button @click="logout()" type="button" class="btn btn-light">LOGOUT</button>
         </li>
       </ul>
     </div>

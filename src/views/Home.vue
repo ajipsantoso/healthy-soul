@@ -18,9 +18,8 @@ export default {
   components: {
     Navbar,
   },
-  methods:{
-    
-  }
+  methods: {
+  },
 };
 </script>
 
@@ -40,7 +39,7 @@ body,html{height:100%; width: 100%;}
 .card .card-img-top{
     margin-top: 10px;
     width: 50%;
-} 
+}
 .card .card-title{
     height: 50px;
 }

@@ -11,20 +11,25 @@ const router = new Router({
     {
       path: '/',
       component: () => import(/* webpackChunkName: "Home" */ './views/Home.vue'),
-      redirect: '/dashboard',
+      redirect: 'dashboard',
       meta: {
         requiresAuth: true,
       },
       children: [
         {
-          path: '/consul',
+          path: 'consul',
           name: 'consultation',
-          component: () => import('./components/Consultation.vue')
+          component: () => import('./components/Consultation.vue'),
         },
         {
-          path: '/dashboard',
+          path: 'dashboard',
           name: 'dashboard',
-          component: () => import('./components/Dashboard.vue')
+          component: () => import('./components/Dashboard.vue'),
+        },
+        {
+          path: 'career',
+          name: 'career',
+          component: () => import('./components/Career.vue'),
         },
       ],
     },

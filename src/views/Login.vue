@@ -1,41 +1,41 @@
 <template>
   <div class="login">
       <div class="box">
-            <div class="box_title">
-                    LOGIN USER
-            </div>
-            <div class="box_content">
-                <div class="form-group">
-                    <label for="exampleInputEmail1"></label>
-                    <input v-model="email"
-                    type="email"
-                    class="form-control"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="username"
-                    required>
-                </div>
-                <div class="form-group">
-                    <label  for="exampleInputPassword1"></label>
-                    <input v-model="password"
-                    type="password"
-                    class="form-control"
-                    id="exampleInputPassword1"
-                    placeholder="password"
-                    required>
-                </div>
-                <div class="form-submit">
-                    <div class="submit-left">
-                        <button @click="signIn()" type="submit" class="btn btn-primary">
-                          Login
-                        </button>
-                        <a href=""><span>REGISTER</span></a>
-                    </div>
-                    <div class="submit-right">
-                        <a class="forgot" href="#"><span>Forget password?</span></a>
-                    </div>
-                </div>                
-            </div>
+          <div class="box_title">
+                  LOGIN USER
+          </div>
+          <div class="box_content">
+              <div class="form-group">
+                  <label for="exampleInputEmail1"></label>
+                  <input v-model="email"
+                  type="email"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                  placeholder="username"
+                  required>
+              </div>
+              <div class="form-group">
+                  <label  for="exampleInputPassword1"></label>
+                  <input v-model="password"
+                  type="password"
+                  class="form-control"
+                  id="exampleInputPassword1"
+                  placeholder="password"
+                  required>
+              </div>
+              <div class="form-submit">
+                  <div class="submit-left">
+                      <button @click="signIn()" type="submit" class="btn btn-primary">
+                        Login
+                      </button>
+                      <a href=""><span>REGISTER</span></a>
+                  </div>
+                  <div class="submit-right">
+                      <a class="forgot" href="#"><span>Forget password?</span></a>
+                  </div>
+              </div>
+          </div>
       </div>
   </div>
 </template>
