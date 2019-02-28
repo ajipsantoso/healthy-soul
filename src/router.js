@@ -34,7 +34,7 @@ const router = new Router({
         {
           path: 'college',
           name: 'college',
-          component: () => import('./components/Career.vue'),
+          component: () => import('./components/College.vue'),
         },
       ],
     },
