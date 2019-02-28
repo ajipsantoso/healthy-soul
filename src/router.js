@@ -17,18 +17,23 @@ const router = new Router({
       },
       children: [
         {
-          path: 'consul',
-          name: 'consultation',
-          component: () => import('./components/Consultation.vue'),
-        },
-        {
           path: 'dashboard',
           name: 'dashboard',
           component: () => import('./components/Dashboard.vue'),
         },
         {
+          path: 'consul',
+          name: 'consultation',
+          component: () => import('./components/Consultation.vue'),
+        },
+        {
           path: 'career',
           name: 'career',
+          component: () => import('./components/Career.vue'),
+        },
+        {
+          path: 'college',
+          name: 'college',
           component: () => import('./components/Career.vue'),
         },
       ],

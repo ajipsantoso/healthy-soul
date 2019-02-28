@@ -1,8 +1,8 @@
 <template>
-    <div class="career">
+    <div class="college">
         <div class="box">
             <div class="box_title">
-                Find Your Career
+                Find Your Colloge Major
             </div>
             <div class="box_content">
                 <ol>
@@ -42,21 +42,28 @@
                         <div class="form-group">
                             <div class="container">
                                 <div class="row">
-                                    INTERESTS: Where the place do you like to work?
+                                    INTERESTS: What is your hobby?
                                 </div>
                                 <div class="row">
                                     <div class="form-check">
                                         <input class="form-check-input" v-model="quest2"
                                         type="radio" name="gridRadios2" id="gridRadios4" value="0">
                                         <label class="form-check-label" for="gridRadios4">
-                                            Office
+                                            Reading
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" v-model="quest2"
                                         type="radio" name="gridRadios2" id="gridRadios5" value="1">
                                         <label class="form-check-label" for="gridRadios5">
-                                            Outdoor
+                                            Sport
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" v-model="quest2"
+                                        type="radio" name="gridRadios2" id="gridRadios6" value="2">
+                                        <label class="form-check-label" for="gridRadios6">
+                                            Computer
                                         </label>
                                     </div>
                                 </div>
@@ -67,28 +74,21 @@
                         <div class="form-group">
                             <div class="container">
                                 <div class="row">
-                                    STYLE: What style of work environment are you looking for?
+                                    SCHOOL DEGREE: Where do you come from?
                                 </div>
                                 <div class="row">
                                     <div class="form-check">
                                         <input class="form-check-input" v-model="quest3"
-                                        type="radio" name="gridRadios3" id="gridRadios6" value="0">
-                                        <label class="form-check-label" for="gridRadios6">
-                                            Attention to Detail
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="quest3"
-                                        type="radio" name="gridRadios3" id="gridRadios7" value="1">
+                                        type="radio" name="gridRadios3" id="gridRadios7" value="0">
                                         <label class="form-check-label" for="gridRadios7">
-                                            Integrity
+                                            SMA : IPA
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" v-model="quest3"
-                                        type="radio" name="gridRadios3" id="gridRadios8" value="2">
+                                        type="radio" name="gridRadios3" id="gridRadios8" value="1">
                                         <label class="form-check-label" for="gridRadios8">
-                                            Initiative
+                                            SMA : IPS
                                         </label>
                                     </div>
                                 </div>
@@ -111,7 +111,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'career',
+  name: 'college',
   components: {
   },
   data: () => ({
@@ -130,16 +130,20 @@ export default {
               {
                 value: 'Answer 2',
               },
-              {
-                value: 'Answer 3',
-              },
             ],
           },
           {
             second: [
               {
+                value: 'Answer 3',
+              },
+              {
                 value: 'Answer 4',
               },
+            ],
+          },
+          {
+            second: [
               {
                 value: 'Answer 5',
               },
@@ -160,16 +164,20 @@ export default {
               {
                 value: 'Answer 8',
               },
-              {
-                value: 'Answer 9',
-              },
             ],
           },
           {
             second: [
               {
+                value: 'Answer 9',
+              },
+              {
                 value: 'Answer 10',
               },
+            ],
+          },
+          {
+            second: [
               {
                 value: 'Answer 11',
               },
@@ -190,16 +198,20 @@ export default {
               {
                 value: 'Answer 14',
               },
-              {
-                value: 'Answer 15',
-              },
             ],
           },
           {
             second: [
               {
+                value: 'Answer 15',
+              },
+              {
                 value: 'Answer 16',
               },
+            ],
+          },
+          {
+            second: [
               {
                 value: 'Answer 17',
               },
@@ -227,7 +239,7 @@ html,body{
     height: 100%;
     width: 100%;
 }
-.career{
+.college{
     height: 100%;
     width: 100%;
     display: flex;

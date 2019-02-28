@@ -35,7 +35,7 @@
                                 <p class="card-text">Lorem ipsum dolor sit amet consectetur
                                     adipisicing elit. Tempore facilis illo nulla temporibus
                                     impedit? Eaque asperiores quia veniam.</p>
-                                <button @click="goCareer"
+                                <button @click="goCollege"
                                 class="btn btn-primary">Learn More</button>
                                 </div>
                             </div>
@@ -71,6 +71,8 @@ export default {
       this.goConsul();
     } else if (this.$router.currentRoute.name === 'career') {
       this.goCareer();
+    } else if (this.$router.currentRoute.name === 'career') {
+      this.goCollege();
     }
   },
   methods: {
@@ -79,7 +81,9 @@ export default {
     },
     goCareer() {
       this.$router.push({ path: '/career' });
-      console.log(this.$router.currentRoute.name);
+    },
+    goCollege() {
+      this.$router.push({ path: '/college' });
     },
     goDashboard() {
       this.$router.push({ path: '/dashboard' });
