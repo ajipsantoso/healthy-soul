@@ -3,14 +3,16 @@
     <div class="container">
             <div class="row">
                     <div class="card-deck">
-                            <div class="card bg-light text-white ">
+                            <div @click="goConsulChat('off')"
+                            class="card bg-light text-white ">
                                     <img class="img-fluid card-img"
                                     src="@/assets/consul_1.png" alt="Card image">
                                     <div class="card-img-overlay">
                                         <h3 class="card-title">Register Consultation</h3>
                                     </div>
                             </div>
-                            <div class="card bg-light text-white">
+                            <div @click="goConsulChat('on')"
+                            class="card bg-light text-white">
                                     <img class="img-fluid card-img"
                                     src="@/assets/consul_2.png" alt="Card image">
                                     <div class="card-img-overlay">
@@ -31,6 +33,13 @@ export default {
   components: {
   },
   methods: {
+    goConsulChat(type) {
+      if (type === 'on') {
+        this.$router.push({ path: '/consulchat' });
+      } else {
+        this.$router.push({ path: '/consul-off' });
+      }
+    },
   },
 };
 </script>

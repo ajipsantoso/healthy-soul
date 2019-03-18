@@ -29,7 +29,7 @@
                       <button @click="signIn()" type="submit" class="btn btn-primary">
                         Login
                       </button>
-                      <a href=""><span>REGISTER</span></a>
+                      <router-link to="/register"><span>REGISTER</span></router-link>
                   </div>
                   <div class="submit-right">
                       <a class="forgot" href="#"><span>Forget password?</span></a>

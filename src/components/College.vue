@@ -251,8 +251,8 @@ ol li{
 }
 .box{
     color: #1a1a1a;
-    width: 40%;
-    height: 60%;
+    width: 50%;
+    height: 70%;
     background-color: #fff;
     border-radius: 20px;
     box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);

@@ -25,7 +25,7 @@
         <li class="nav-item">
             <div class="user">
                 <font-awesome-icon icon="user" style="color:white;" size="lg"/>
-                <span>User@gmail.com</span>
+                <span>{{authUser}}</span>
             </div>
         </li>
         <li class="nav-item">
@@ -39,7 +39,7 @@
 
 <script>
 
-import firebase from 'firebase';
+import { auth, db } from '@/firebase/firebaseInit';
 
 export default {
   data: () => ({
@@ -47,21 +47,26 @@ export default {
       shrink: false,
       navcolaps: false,
     },
+    authUser: null,
   }),
   methods: {
     navset() {
-      this.dynamicNav.shrink = window.scrollY > 60;
+      this.dynamicNav.shrink = window.scrollY > 20;
     },
     navcolaps_js() {
       this.dynamicNav.navcolaps = !this.dynamicNav.navcolaps;
     },
     logout() {
-      firebase.auth().signOut().then(() => {
+      auth.signOut().then(() => {
         this.$router.push('/login');
       });
     },
+    getEmail() {
+      this.authUser = auth.currentUser.email;
+    },
   },
   created() {
+    this.getEmail();
     window.addEventListener('scroll', this.navset);
   },
   destroyed() {

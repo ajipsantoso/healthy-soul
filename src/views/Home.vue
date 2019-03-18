@@ -32,6 +32,7 @@ body,html{height:100%; width: 100%;}
   height:100%;
   text-align: center;
   margin: 0 auto;
+  padding-top:80px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -36,6 +36,21 @@ const router = new Router({
           name: 'college',
           component: () => import('./components/College.vue'),
         },
+        {
+          path: 'consulchat',
+          name: 'consulchat',
+          component: () => import('./components/ConsulChat.vue'),
+        },
+        {
+          path: 'consul-off',
+          name: 'consul-off',
+          component: () => import('./components/Cns_Off.vue'),
+        },
+        {
+          path: 'consul-off-bayar',
+          name: 'consul-off-bayar',
+          component: () => import('./components/Cns_Off_Pay.vue'),
+        },
       ],
     },
     {
@@ -53,6 +68,14 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: () => import(/* webpackChunkName: "Home" */ './views/Login.vue'),
+      meta: {
+        requiresGuest: true,
+      },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import(/* webpackChunkName: "Home" */ './views/Register.vue'),
       meta: {
         requiresGuest: true,
       },

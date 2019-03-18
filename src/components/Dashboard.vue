@@ -88,6 +88,9 @@ export default {
     goDashboard() {
       this.$router.push({ path: '/dashboard' });
     },
+    goConsulChat() {
+      this.$router.push({ path: '/consulchat' });
+    },
   },
 };
 </script>
