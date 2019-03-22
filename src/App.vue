@@ -17,6 +17,7 @@ html,body{
 }
 #app{
   height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .fade-enter-active, .fade-leave-active {
   transition-property: opacity;

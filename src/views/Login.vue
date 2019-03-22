@@ -7,7 +7,7 @@
           <div class="box_content">
               <div class="form-group">
                   <label for="exampleInputEmail1"></label>
-                  <input v-model="email"
+                  <input @keyup.enter="signIn()" v-model="email"
                   type="email"
                   class="form-control"
                   id="exampleInputEmail1"
@@ -17,7 +17,7 @@
               </div>
               <div class="form-group">
                   <label  for="exampleInputPassword1"></label>
-                  <input v-model="password"
+                  <input @keyup.enter="signIn()" v-model="password"
                   type="password"
                   class="form-control"
                   id="exampleInputPassword1"
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { auth } from '../firebase/firebaseInit';
+import { auth, db_real } from '../firebase/firebaseInit';
 
 export default {
   data: () => ({
@@ -50,10 +50,45 @@ export default {
     password: '',
   }),
   methods: {
+    async makeunvalidate(key){
+      console.log('masuk')
+      
+    },
+    async getPayment(){
+      let data = '';
+      await db_real.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
+            s.forEach(async function(childSnapshot) {
+            let childData = childSnapshot.val();
+            let id=childData.id;
+            console.log(childData);
+            if (childData.status === 'wait'){
+              let checkDate = new Date(childData.date);
+              let today =  new Date();
+              if (checkDate > today){
+                localStorage.setItem('transaksi', JSON.stringify({biaya:childData.biaya, gate: childData.gateway, tanggal: childData.date}));
+              }
+              else{
+                localStorage.setItem('expire', true);
+                await db_real.ref('reservasi/'+childSnapshot.key).update({
+                    status : 'expire',
+                }).catch((err) => {
+                    // eslint-disable-next-line
+                    alert('opps', err.message);
+                    return;
+                });
+              }
+            }else if (childData.status === 'expire'){
+              localStorage.setItem('expire', true);
+            }
+            });
+      });
+    },
     signIn() {
       auth.signInWithEmailAndPassword(this.email, this.password)
-        .then(() => {
+        .then((snap) => {
           // eslint-disable-next-line
+          console.log(snap.user.uid)
+          this.getPayment();
           alert(`You are logged in as ${this.email}`);
           this.$router.push('/');
         })

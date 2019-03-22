@@ -242,6 +242,7 @@ html,body{
 .college{
     height: 100%;
     width: 100%;
+    margin: 50px auto 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -288,6 +289,7 @@ ol li{
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
+    margin: 0 0 25px;
 }
 a{
     color: #1a1a1a;

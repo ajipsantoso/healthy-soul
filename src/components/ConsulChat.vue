@@ -1,6 +1,7 @@
 <template>
     <div class="consulchat">
-        <div class="container">
+      <div v-if='!chooseDoctor'>
+        <div class="container chat">
             <h3 class=" text-center">Messaging</h3>
             <div class="messaging">
                 <div class="inbox_msg">
@@ -9,7 +10,7 @@
                             <div class="recent_heading">
                             <h4>Recent</h4>
                             </div>
-                            <div class="srch_bar">
+                            <!-- <div class="srch_bar">
                                 <div class="stylish-input-group">
                                     <input type="text" class="search-bar" placeholder="Search" >
                                     <span class="input-group-addon">
@@ -18,7 +19,7 @@
                                     </button>
                                     </span>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="inbox_chat">
                             <div v-for="(chat_person, idx_prsn) in sorted"
@@ -32,10 +33,8 @@
                                         <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
-                                    <h5>{{chat_person.chatUser}}
-                                      <span class="chat_date">Month Day</span>
-                                    </h5>
-                                    <p>{{chat_person.chat[chat_person.chat.length-1].message}}</p>
+                                      <h5>{{chat_person.userName}}
+                                      </h5>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +76,7 @@
                             <input @keyup.enter="saveMessage" v-model="message"
                             type="text" class="write_msg"
                             placeholder="Type a message" />
-                            <button class="msg_send_btn" type="button">
+                            <button @click="saveMessage" class="msg_send_btn" type="button">
                                 <font-awesome-icon icon="paper-plane"/></button>
                             </div>
                         </div>
@@ -85,12 +84,38 @@
                 </div>
             </div>
         </div>
+      </div>
+      <div class="box" v-else>
+        <div class="box_title">
+          Who do you want to cunsult with?
+        </div>
+        <div class="box_content">
+          <div @click="docUser('admin@admin.com')" class="form-check-label doctor">
+            <div class="label-img">
+                <img src="@/assets/Mask_Group_1.png" alt="">
+            </div>
+            <div class="label-desc">
+                <h5>Jagar Manjensen</h5>
+                <p>Psikologi Pendidikan</p>
+            </div>
+          </div>
+          <div @click="docUser('admin2@admin.com')" class="form-check-label doctor">
+            <div class="label-img">
+                <img src="@/assets/Mask_Group_1.png" alt="">
+            </div>
+            <div class="label-desc">
+                <h5>Jagar Manjensen</h5>
+                <p>Psikologi Pendidikan</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import { auth, db } from '@/firebase/firebaseInit';
+import { auth, db, db_real } from '@/firebase/firebaseInit';
 
 export default {
   name: 'consulchat',
@@ -102,57 +127,85 @@ export default {
     sorted: [],
     authUser: {},
     selectedUser: null,
+    chooseDoctor: true,
   }),
   methods: {
-    saveMessage() {
+    docUser(selected){
+      this.chooseDoctor=false;
+      this.selectedUser=selected;
+      this.fetchMessage(selected);
+    }, 
+    async saveMessage(){
+      let docName;
+      await db_real.ref('users/').orderByChild('email').equalTo(this.selectedUser).once('value').then((s) => {
+        s.forEach(function(data) {
+            console.log(data.val());
+            docName=data.val().nama
+        });
+      });
       db.collection('chat').add({
         message: this.message,
         time: new Date(),
         author: this.authUser.email,
+        authorName: this.authUser.displayName,
+        sendtoName: docName,
         sendto: this.selectedUser,
       });
       this.message = null;
       console.log(this.selectedUser);
     },
-    sortMessage(msg) {
+    sortMessage(msg,status) {
       this.sorted = [];
       for (let i = 0; i < msg.length; i += 1) {
         if (msg[i].author === this.authUser.email || msg[i].sendto === this.authUser.email) {
-          if (this.sorted.length === 0) {
-            if (msg[i].author !== this.authUser.email) {
-              this.sorted.push({ chatUser: msg[i].author, chat: [msg[i]], show: true });
-            } else {
-              this.sorted.push({ chatUser: msg[i].sendto, chat: [msg[i]], show: true });
-            }
-          } else {
+          // if (this.sorted.length === 0) {
+          //   if (msg[i].author !== this.authUser.email) {
+          //     console.log('test1')
+          //     this.sorted.push({ chatUser: msg[i].author, chat: [msg[i]],});
+          //   } else {
+          //     console.log('test2')
+          //     this.sorted.push({ chatUser: msg[i].sendto, chat: [msg[i]],});
+          //   }
+          // } else {
             let found = false;
             for (let j = 0; j < this.sorted.length; j += 1) {
               if ((this.sorted[j].chatUser === msg[i].author
               && msg[i].author !== this.authUser.email)
                 || (this.sorted[j].chatUser === msg[i].sendto
                 && msg[i].sendto !== this.authUser.email)) {
+                  console.log('test3',msg[i])
                 this.sorted[j].chat.push(msg[i]);
+                console.log(this.sorted)
                 found = true;
               }
             }
             if (found === false) {
               if (msg[i].author !== this.authUser.email) {
-                this.sorted.push({ chatUser: msg[i].author, chat: [msg[i]], show: false });
+                console.log('test4')
+                if(status==='admin'){
+                  this.sorted.push({ userName:msg[i].authorName, chatUser: msg[i].author, chat: [msg[i]],});
+                }
+                else{
+                  this.sorted.push({ userName:msg[i].sendtoName, chatUser: msg[i].author, chat: [msg[i]],});
+                }
               } else {
-                this.sorted.push({ chatUser: msg[i].sendto, chat: [msg[i]], show: false });
+                console.log('test5')
+                if(status==='admin'){
+                  this.sorted.push({ userName:msg[i].authorName, chatUser: msg[i].author, chat: [msg[i]],});
+                }
+                else{
+                  this.sorted.push({ userName:msg[i].sendtoName, chatUser: msg[i].sendto, chat: [msg[i]],});
+                }
               }
             }
-          }
+          // }
         }
-      }
-      if (this.sorted.length === 0 && this.authUser.email !== 'admin@admin.com') {
-        this.selectedUser = 'admin@admin.com';
       }
       if (this.selectedUser === null){
         this.selectedUser = this.sorted[0].chatUser;
       }
     },
-    fetchMessage() {
+    fetchMessageAdmin() {
       db.collection('chat').orderBy('time')
         .onSnapshot((querySanpshot) => {
           let allMessage = [];
@@ -160,10 +213,37 @@ export default {
             allMessage.push(doc.data());
           });
           this.messages = allMessage;
-          this.sortMessage(allMessage);
+          this.sortMessage(allMessage,'admin');
           allMessage = [];
         });
     },
+    fetchMessage(user) {
+      db.collection('chat').orderBy('time')
+        .onSnapshot((querySanpshot) => {
+          let allMessage = [];
+          querySanpshot.forEach((doc) => {
+            if(doc.data().sendto === user){
+              allMessage.push(doc.data());
+            }
+          });
+          this.messages = allMessage;
+          this.sortMessage(allMessage,'user');
+          allMessage = [];
+        });
+    },
+    async checkUser(){
+      let status=null;
+      await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
+          status = s.val().status;
+      })
+      if ( status === 'admin'){
+        this.chooseDoctor = false;
+        this.fetchMessageAdmin();
+      }else{
+        this.chooseDoctor = true;
+        //this.fetchMessage();
+      }
+    }
   },
   created() {
     auth.onAuthStateChanged((user) => {
@@ -173,18 +253,42 @@ export default {
         this.authUser = {};
       }
     });
-    this.fetchMessage();
+    this.checkUser();
+    //this.fetchMessage();
   },
 };
 </script>
 
 <style scoped>
 body,html{height:100%; width: 100%;}
-.consulchat{
-    margin-top: 200px;
-}
 .container{max-width:1170px; margin:auto;}
 img{ max-width:100%;}
+.box{
+    color: #1a1a1a;
+    display: flex;
+    flex-direction:column;
+}
+.box_title{
+    margin-bottom: 18px;
+    text-align: center;
+    font-size: 24px;
+}
+.box_content{
+  display: flex;
+  flex-direction: row;
+}
+.form-check-label{
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, .5);
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.form-check-label.doctor{
+    min-width: 300px;
+}
 .inbox_people {
   background: #f8f8f8 none repeat scroll 0 0;
   float: left;
@@ -195,6 +299,7 @@ img{ max-width:100%;}
   border: 1px solid #c4c4c4;
   clear: both;
   overflow: hidden;
+  border-radius: 10px;
 }
 .top_spac{ margin: 20px 0 0;}
 
@@ -229,24 +334,31 @@ img{ max-width:100%;}
 }
 .srch_bar .input-group-addon { margin: 0 0 0 -27px;}
 
-.chat_ib h5{ font-size:15px; color:#464646; margin:0 0 8px 0;}
-.chat_ib h5 span{ font-size:13px; float:right;}
+.chat_ib h5{ font-size:18px; color:#464646; margin:0 0 0 0;}
 .chat_ib p{ font-size:14px; color:#989898; margin:auto}
 .chat_img {
   float: left;
-  width: 11%;
+  width: 15%;
 }
 .chat_ib {
-  float: left;
-  padding: 0 0 0 15px;
-  width: 88%;
+  
+  padding: 5px 0 5px 15px;
+  text-align: left;
+  width: 85%;
+  display: flex;
+  align-items: center;
 }
 
-.chat_people{ overflow:hidden; clear:both;}
+.chat_people{ 
+  overflow:auto; clear:both;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 .chat_list {
   border-bottom: 1px solid #c4c4c4;
   margin: 0;
-  padding: 18px 16px 10px;
+  padding: 18px 16px;
 }
 .inbox_chat { height: 550px; overflow-y: scroll;}
 
@@ -264,7 +376,7 @@ img{ max-width:100%;}
  }
  .received_withd_msg p {
   background: #ebebeb none repeat scroll 0 0;
-  border-radius: 3px;
+  border-radius: 25px 25px 25px 0px;
   color: #646464;
   font-size: 14px;
   margin: 0;
@@ -286,7 +398,7 @@ img{ max-width:100%;}
 
  .sent_msg p {
   background: #05728f none repeat scroll 0 0;
-  border-radius: 3px;
+  border-radius: 25px 25px 0px 25px;
   font-size: 14px;
   margin: 0; color:#fff;
   padding: 5px 10px 5px 12px;
@@ -320,7 +432,10 @@ img{ max-width:100%;}
   top: 11px;
   width: 33px;
 }
-.messaging { padding: 0 0 50px 0;}
+.messaging { 
+  padding: 0 0 50px 0;
+  
+}
 .msg_history {
   height: 516px;
   overflow-y: auto;

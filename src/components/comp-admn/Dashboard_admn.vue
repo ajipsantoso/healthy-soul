@@ -37,7 +37,7 @@ export default {
       if (type === 'on') {
         this.$router.push({ path: '/consulchat' });
       } else {
-        this.$router.push({ path: '/consul-off' });
+        this.$router.push({ path: '/data-offline' });
       }
     },
   },

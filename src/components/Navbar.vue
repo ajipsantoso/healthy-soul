@@ -24,8 +24,8 @@
       <ul class="navbar-nav">
         <li class="nav-item">
             <div class="user">
-                <font-awesome-icon icon="user" style="color:white;" size="lg"/>
-                <span>{{authUser}}</span>
+                <img v-bind:src="authUser.photoURL" alt="profpict" class="rounded-circle" style="width: 50px; height: 50px;">
+                <span>{{authUser.email}}</span>
             </div>
         </li>
         <li class="nav-item">
@@ -57,12 +57,13 @@ export default {
       this.dynamicNav.navcolaps = !this.dynamicNav.navcolaps;
     },
     logout() {
+      localStorage.clear();
       auth.signOut().then(() => {
         this.$router.push('/login');
       });
     },
     getEmail() {
-      this.authUser = auth.currentUser.email;
+      this.authUser = auth.currentUser;
     },
   },
   created() {

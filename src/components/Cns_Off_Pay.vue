@@ -1,117 +1,99 @@
 <template>
-    <div class="consul">
-        <div class="box">
-            <div class="box_title">
-                Register Consultation
-            </div>
-            <div class="box_content">
-                        <div class="form-group">
-                            <div class="container">
-                                <div class="row data-doctor">
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="doctor"
-                                        type="radio" name="gridDoctor" id="gridRadios1"
-                                        value="doctor1">
-                                        <label class="form-check-label doctor" for="gridRadios1">
-                                                <div class="label-img">
-                                                    <img src="@/assets/Mask_Group_1.png" alt="">
-                                                </div>
-                                                <div class="label-desc">
-                                                    <h5>Jagar Manjensen</h5>
-                                                    <p>Psikologi Pendidikan</p>
-                                                </div>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="doctor"
-                                        type="radio" name="gridDoctor" id="gridRadios2"
-                                        value="doctor2">
-                                        <label class="form-check-label doctor" for="gridRadios2">
-                                                <div class="label-img">
-                                                    <img src="../assets/Mask_Group_1.png" alt="">
-                                                </div>
-                                                <div class="label-desc">
-                                                    <h5>John Doe</h5>
-                                                    <p>Psikiater Umum</p>
-                                                </div>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="row data-time">
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="time"
-                                        type="radio" name="gridTime" id="gridTime1"
-                                        value="Senin - 16:00">
-                                        <label class="form-check-label time" for="gridTime1">
-                                                <div class="label-desc">
-                                                    <h5>Senin - 16:00</h5>
-                                                </div>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="time"
-                                        type="radio" name="gridTime" id="gridTime2"
-                                        value="Selasa - 16:00">
-                                        <label class="form-check-label time" for="gridTime2">
-                                                <div class="label-desc">
-                                                    <h5>Selasa - 16:00</h5>
-                                                </div>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="time"
-                                        type="radio" name="gridTime" id="gridTime3"
-                                        value="Rabu - 19:00">
-                                        <label class="form-check-label time" for="gridTime3">
-                                                <div class="label-desc">
-                                                    <h5>Rabu - 19:00</h5>
-                                                </div>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="time"
-                                        type="radio" name="gridTime" id="gridTime4"
-                                        value="Kamis - 16:00">
-                                        <label class="form-check-label time" for="gridTime4">
-                                                <div class="label-desc">
-                                                    <h5>Kamis - 16:00</h5>
-                                                </div>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="time"
-                                        type="radio" name="gridTime" id="gridTime5"
-                                        value="Jumat - 16:00">
-                                        <label class="form-check-label time" for="gridTime5">
-                                                <div class="label-desc">
-                                                    <h5>Jumat - 16:00</h5>
-                                                </div>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" v-model="time"
-                                        type="radio" name="gridTime" id="gridTime6"
-                                        value="Sabtu - 08:00">
-                                        <label class="form-check-label time" for="gridTime6">
-                                                <div class="label-desc">
-                                                    <h5>Sabtu - 08:00</h5>
-                                                </div>
-                                        </label>
-                                    </div>
-                                </div>
+    <div class="consul_pay">
+        <div v-if="!expire">
+            <div class="box" v-if="choose">
+                <div class="box_title">
+                    <span class="title">Total Payment</span>
+                    <span class="title biaya">Rp {{biaya}}</span>
+                </div>
+                <div class="box_content">
+                    <div class="form-group">
+                        <div class="container">
+                            <div class="box_data">
+                                <label class="form-check-label time" for="gate1">
+                                        <div class="label-desc">
+                                            <h5>Alfamart</h5>
+                                        </div>
+                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
+                                type="radio" name="gridGate" id="gate1"
+                                value="Alfamart">
+                                </label>
+                            </div>
+                            
+                            <div class="box_data">
+                                
+                                <label class="form-check-label time" for="gate2">
+                                        <div class="label-desc">
+                                            <h5>Indomaret</h5>
+                                        </div>
+                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
+                                type="radio" name="gridGate" id="gate2"
+                                value="Indomaret">
+                                </label>
+                            </div>
+                            <div class="box_data">
+                                
+                                <label class="form-check-label time" for="gate3">
+                                        <div class="label-desc">
+                                            <h5>Mandiri</h5>
+                                        </div>
+                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
+                                type="radio" name="gridGate" id="gate3"
+                                value="Mandiri">
+                                </label>
+                            </div>
+                            <div class="box_data">
+                                <label class="form-check-label time" for="gate4">
+                                        <div class="label-desc">
+                                            <h5>BCA</h5>
+                                        </div>
+                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
+                                type="radio" name="gridGate" id="gate4"
+                                value="BCA">
+                                </label>
                             </div>
                         </div>
-                        <div class="alamat">
-                            <b>Tempat Pertemuan : </b>Ruko A1 Lantai 1, Jl. Telekomunikasi,
-                            Jl. Terusan Buah Batu No.01, Sukapura, Dayeuhkolot, Bandung,
-                            Jawa Barat 40257
-                        </div>
-                        <div class="biaya">
-                            <b>BIAYA KONSULTASI : <span>Rp. 500.000</span></b>
-                        </div>
-                <div class="form-submit">
-                    <button @click="onPayment" type="button" class="btn btn-primary">Payment</button>
+                    </div>
                 </div>
+            </div>
+            <div class="box" v-else>
+                <div class="box_title">
+                    <span class="title">Instruksi Pembayaran</span>
+                    <span class="title">Transfer tepat sesuai nominal berikut</span>
+                    <span class="title biaya">Rp {{biaya}}</span>
+                </div>
+                <div class="box_content">
+                    <div class="box_notif">
+                        <div class="notif_icon">
+                            <font-awesome-icon icon="exclamation-circle" size="2x"/>
+                        </div>
+                        <div class="notif_desc">
+                            <span>PENTING! Mohon transfer tepat sampai 3 angka</span>
+                            <span>terakhir agar pembayaran Anda dapat diproses</span>
+                        </div>
+                    </div>
+                    <div class="box_content">
+                        <span v-if="gate_pay=='Indomaret'||gate_pay=='Alfamart'">Kode pembayaran : </span>
+                        <span v-else>Transfer ke rekening a/n <b>PT. Healthy Soul</b> berikut ini : </span>
+                        <h4 class="rekening">111 222 333 44455</h4>
+                    </div>
+                    <div class="box_footer">
+                        <span>Bayar sebelum <b>{{`${tanggal} WIB`}}</b> atau</span>
+                        <span>tiket Anda dibatalkan oleh sistem.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box" v-else>
+            <div class="box_title">
+                <span class="title">Transaction Expire</span>
+            </div>
+            <div class="box_content">
+                <span>Your last transaction was expire</span>
+                <button @click="goConsul"
+                class="btn btn-primary">New Transaction
+                </button>
+                
             </div>
         </div>
     </div>
@@ -119,19 +101,94 @@
 
 <script>
 // @ is an alias to /src
-
+import {auth, db_real} from '../firebase/firebaseInit';
 export default {
-  name: 'consul-off',
+  
+  name: 'consul-off-pay',
+  props: ['consul'],
   components: {
   },
   data: () => ({
-    doctor: '',
-    time: '',
+      biaya: '',
+      gate_pay: '',
+      choose: true,
+      tanggal: '',
+      expire: false,
   }),
+  computed:{
+      
+  },
   methods: {
-      onPayment(){
-          this.$router.push({ path: '/consul-off-bayar' });
-      },
+    goConsul(){
+        this.$router.push({ path: '/consul-off' });
+    },
+    setTanggal(){
+          const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+          ];
+          let result= new Date();
+          result.setDate(result.getDate() + 2);
+          console.log(result.getDate());
+          let hasil=
+          `${result.getDate()} ${monthNames[result.getMonth()]} ${result.getFullYear()} ${result.getHours()}:${result.getMinutes()} WIB`
+          return hasil; 
+    },
+    async paynow(){
+        this.choose = false;
+        let count = null;
+        await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) => {
+            count = s.val().reservasi;
+        });
+        await db_real.ref('reservasi/').push().set({
+            uid : auth.currentUser.uid,
+            dokter : this.consul.doctor,
+            waktu : this.consul.time,
+            biaya : this.biaya,
+            nama : auth.currentUser.displayName,
+            date: this.tanggal,
+            timespan: new Date().getTime(),
+            gateway: this.gate_pay,
+            status: 'wait',
+        }).catch((err) => {
+            // eslint-disable-next-line
+            alert('opps', err.message);
+            return;
+        });
+        await db_real.ref('users/'+auth.currentUser.uid).update({
+            reservasi : count+1,
+        }).catch((err) => {
+            // eslint-disable-next-line
+            alert('opps', err.message);
+            return;
+        });
+        localStorage.setItem('transaksi', JSON.stringify({biaya:this.biaya, gate:this.gate_pay, tanggal:this.tanggal}));
+    },
+  },
+  created(){
+    if (localStorage.transaksi){
+        this.choose = false;
+        let data = JSON.parse(localStorage.getItem('transaksi'));
+        this.biaya = data.biaya;
+        this.gate_pay = data.gate;
+        this.tanggal = data.tanggal;
+    }else{
+        if(this.consul){
+            this.tanggal = this.setTanggal();
+            let satuan = Math.floor(Math.random() * 10);
+            let puluh = Math.floor(Math.random() * 10)*10;
+            let ratus = Math.floor(Math.random() * 10)*100;
+            this.biaya = (500000 + ratus + puluh + satuan).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+        }else{
+            let check = JSON.parse(localStorage.getItem('expire'));
+            console.log(check);
+            if (check){
+                this.choose=false;
+                this.expire=true;
+            }else if(check === null){
+                this.$router.push({ name: 'consul-off'});
+            } 
+        }
+    }
   },
 };
 </script>
@@ -141,11 +198,20 @@ html,body{
     height: 100%;
     width: 100%;
 }
+
 input{
-    visibility:hidden;
+    margin-top:0;
+    display: inline-flex;
 }
-input:checked + .form-check-label{
-    box-shadow: 0px 0px 10px rgba(13, 107, 170, 1);
+.form-check-input{
+    position: relative;
+}
+.form-check-label{
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 .consul{
     height: 100%;
@@ -161,82 +227,58 @@ input:checked + .form-check-label{
     background-color: #fff;
     border-radius: 20px;
     box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
-    text-align: left;
     display: flex;
     flex-direction:column;
 }
-.box_title{
-    margin-bottom: 18px;
-    text-align: center;
-    font-size: 24px;
-}
-.row{
-    margin-bottom: 15px;
-    min-width: 270px;
-}
-.form-group{
-    margin-bottom: unset;
-    display: flex;
-}
-.form-group .container{
-    display: flex;
-    align-items: center;
-    flex-direction:column;
-}
-.form-check{
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-}
-.form-check-label{
-    padding: 20px;
+.box_data{
+    min-width: 400px;
+    margin-top: 15px;
     border-radius: 10px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, .5);
     display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-.form-check-label.doctor{
-    min-width: 300px;
-}
-.form-check-label div img{
-    width: 70px;
-    margin-right: 10px;
-}
-.row.data-doctor .form-check{
-    flex: 1;
-    flex-basis: 40%;
-    margin: 10px 5px;
-    justify-content: center;
-}
-.alamat{
-    max-width: 700px;
-}
-.biaya{
-    flex-wrap: unset;
-}
-.row.data-time{
-    flex-wrap: wrap;
-    max-width: 600px;
-}
-.row.data-time .form-check{
-    flex: 1;
-    flex-basis: 25%;
-    margin: 15px 5px;
-    align-items: center;
-}
-.form-submit{
-    display: flex;
-    flex-direction: row-reverse;
+    flex-direction:row;
     justify-content: space-between;
+    align-items: center;
 }
-a{
-    color: #1a1a1a;
+span.title{
+    font-size: 30px;
 }
-.biaya span{
-    color: red;
+.title.biaya{
+    font-weight: bold;
 }
-.submit-right{
-    height: 30px;
+.box_title, .box_content{
+    text-align: center;
+    display: flex;
+    flex-direction:column;
+}
+.box_content{
+    margin-top: 30px;
+}
+.box_footer{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+}
+.box_notif{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction:row;
+    padding: 30px 0 30px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+.notif_icon{
+    padding: 0 25px;
+}
+.notif_desc{
+    display: flex;
+    flex-direction:column;
+    align-items: flex-start;
+}
+.rekening{
+    margin: 25px 0;
 }
 </style>

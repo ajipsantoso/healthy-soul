@@ -50,9 +50,21 @@ const router = new Router({
           path: 'consul-off-bayar',
           name: 'consul-off-bayar',
           component: () => import('./components/Cns_Off_Pay.vue'),
+          props: true,
+        },
+        {
+          path: 'dashboard-admn',
+          name: 'dashboard-admn',
+          component: () => import('./components/comp-admn/Dashboard_admn.vue'),
+        },
+        {
+          path: 'data-offline',
+          name: 'data-offline',
+          component: () => import('./components/comp-admn/Cns_OffData.vue'),
         },
       ],
     },
+    
     {
       path: '/about',
       name: 'about',
