@@ -178,44 +178,63 @@ export default {
                 });
             });
         });
-    }
+    },
+    async checkStatus(){
+        let dataTrans;
+        await db_real.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
+            s.forEach(async function(childSnapshot) {
+                let child = childSnapshot.val();
+                if (child.status === 'wait') {
+                   dataTrans = child;
+                } else if (child.status === 'accept') {
+                    dataTrans = 'accept'
+                } else {
+                    dataTrans = 'expire'
+                }
+            });
+        });
+        if (dataTrans === 'expire'){
+          this.choose=false;
+          this.expire=true;
+        }else if(dataTrans === 'accept'){
+          this.choose=false;
+          this.expire=true;
+          this.noTransaction=true;
+        }else{
+          this.choose = false;
+          this.biaya = dataTrans.biaya;
+          this.gate_pay = dataTrans.gate;
+          this.tanggal = dataTrans.tanggal;
+        }
+    },
   },
   created(){
-    if (localStorage.transaksi){
-        let data = JSON.parse(localStorage.getItem('transaksi'));
-        let dateNow = new Date();
-        let date = new Date(data.tanggal);
-        if (date < dateNow) {
-            this.choose=false;
-            this.expire=true;
-            localStorage.clear();
-            localStorage.setItem('expire', true);
-        }else{
-            this.choose = false;
-            this.biaya = data.biaya;
-            this.gate_pay = data.gate;
-            this.tanggal = data.tanggal;
-        }
-    }else{
+    // if (localStorage.transaksi){
+    //     let data = JSON.parse(localStorage.getItem('transaksi'));
+    //     let dateNow = new Date();
+    //     let date = new Date(data.tanggal);
+    //     if (date < dateNow) {
+    //         this.choose=false;
+    //         this.expire=true;
+    //         localStorage.clear();
+    //         localStorage.setItem('expire', true);
+    //     }else{
+    //         this.choose = false;
+    //         this.biaya = data.biaya;
+    //         this.gate_pay = data.gate;
+    //         this.tanggal = data.tanggal;
+    //     }
+    // }else{
         if(this.consul){
-            this.tanggal = this.setTanggal();
-            let satuan = Math.floor(Math.random() * 10);
-            let puluh = Math.floor(Math.random() * 10)*10;
-            let ratus = Math.floor(Math.random() * 10)*100;
-            this.biaya = (500000 + ratus + puluh + satuan).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+          this.tanggal = this.setTanggal();
+          let satuan = Math.floor(Math.random() * 10);
+          let puluh = Math.floor(Math.random() * 10)*10;
+          let ratus = Math.floor(Math.random() * 10)*100;
+          this.biaya = (500000 + ratus + puluh + satuan).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
         }else{
-            let check = JSON.parse(localStorage.getItem('expire'));
-            // console.log(check);
-            if (check){
-                this.choose=false;
-                this.expire=true;
-            }else if(check === null){
-                this.choose=false;
-                this.expire=true;
-                this.noTransaction=true;
-            } 
+          this.checkStatus();
         }
-    }
+    // }
   },
 };
 </script>

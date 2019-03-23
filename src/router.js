@@ -53,6 +53,11 @@ const router = new Router({
           props: true,
         },
         {
+          path: 'profile',
+          name: 'profile',
+          component: () => import('./components/Profile.vue'),
+        },
+        {
           path: 'dashboard-admn',
           name: 'dashboard-admn',
           component: () => import('./components/comp-admn/Dashboard_admn.vue'),

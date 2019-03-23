@@ -217,7 +217,7 @@ export default {
           hp: this.hp,
           wali: this.wali,
           tmpt: this.tempat,
-          tgl: new Date(`${this.year}-${this.month}-${this.day}`),
+          tgl: `${this.day} ${this.month} ${this.year}`,
           pddk: this.pendidikan,
           reservasi: 0,
           status: 'user',

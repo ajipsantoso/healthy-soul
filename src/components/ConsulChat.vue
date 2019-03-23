@@ -338,14 +338,12 @@ img{ max-width:100%;}
   width: 15%;
 }
 .chat_ib {
-  
   padding: 5px 0 5px 15px;
   text-align: left;
   width: 85%;
   display: flex;
   align-items: center;
 }
-
 .chat_people{ 
   overflow:auto; clear:both;
   display: flex;
@@ -357,10 +355,8 @@ img{ max-width:100%;}
   margin: 0;
   padding: 18px 16px;
 }
-.inbox_chat { height: 550px; overflow-y: scroll;}
-
+.inbox_chat{ height: 550px; overflow-y: scroll;}
 .active_chat{ background:#ebebeb;}
-
 .incoming_msg_img {
   display: inline-block;
   width: 6%;

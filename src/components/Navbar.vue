@@ -23,9 +23,9 @@
       <div class="mr-auto"> </div>
       <ul class="navbar-nav">
         <li class="nav-item">
-            <div class="user">
+            <div @click="goProfile" class="user">
                 <img v-bind:src="authUser.photoURL" alt="profpict" class="rounded-circle" style="width: 50px; height: 50px;">
-                <span>{{authUser.email}}</span>
+                <span>{{authUser.displayName}}</span>
             </div>
         </li>
         <li class="nav-item">
@@ -65,6 +65,9 @@ export default {
     getEmail() {
       this.authUser = auth.currentUser;
     },
+    goProfile(){
+      this.$router.push({ path: '/profile' });
+    }
   },
   created() {
     this.getEmail();
@@ -166,6 +169,9 @@ ul li span{
 }
 .navibar.shrink .logo_r{
   width: 80%
+}
+.user{
+  cursor: pointer;
 }
 
 @media (max-width: 575.98px) {

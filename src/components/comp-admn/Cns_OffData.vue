@@ -41,7 +41,7 @@
 <script>
 // @ is an alias to /src
 import {auth, db_real} from '@/firebase/firebaseInit'
-import { async } from 'q';
+
 export default {
   name: 'consulOffData',
   data:()=>({

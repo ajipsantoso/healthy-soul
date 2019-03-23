@@ -29,7 +29,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'consul',
+  name: 'dasboard_admin',
   components: {
   },
   methods: {
