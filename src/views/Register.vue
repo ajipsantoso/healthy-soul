@@ -171,104 +171,102 @@ export default {
   }),
   methods: {
     async registerUser(){
-        console.log(this.file);
-        let storageRef = storage.ref('image/');
-        let uploadImgref = storageRef.child(this.username+this.file[0].name);
-        let imgurl = null
-        await uploadImgref.put(this.file[0]).then((snapshot) =>{
-                console.log(snapshot.ref.location);
-                uploadImgref.getDownloadURL().then((url) => {
-                    imgurl= url;
-                }).catch((err) => {
-                    // eslint-disable-next-line
-                    alert('opps', err.message);
-                    return;
-                });
-            }
-        ).catch((err) => {
-            // eslint-disable-next-line
-            alert('opps', err.message);
-            return;
-        });
-        await auth.createUserWithEmailAndPassword(this.email, this.pass)
-        .then((snapshot) => {
-          // eslint-disable-next-line
-        })
-        .catch((err) => {
+      console.log(this.file);
+      let storageRef = storage.ref('image/');
+      let uploadImgref = storageRef.child(this.username+this.file[0].name);
+      let imgurl = null
+      await uploadImgref.put(this.file[0]).then((snapshot) =>{
+        console.log(snapshot.ref.location);
+        uploadImgref.getDownloadURL().then((url) => {
+          imgurl= url;
+        }).catch((err) => {
           // eslint-disable-next-line
           alert('opps', err.message);
           return;
         });
-        let uid = auth.currentUser.uid;
-        let user= auth.currentUser;
-        user.updateProfile({
-                photoURL: imgurl,
-                displayName: this.nama,
-                })
-            .catch((err) => {
-                // eslint-disable-next-line
-                alert('opps', err.message);
-                return;
-            });
-        await db_real.ref('users/'+uid).set({
-            picUrl: imgurl,
-            email: this.email,
-            nama : this.nama,
-            hp : this.hp,
-            wali : this.wali,
-            tmpt : this.tempat,
-            tgl : new Date(`${this.year}-${this.month}-${this.day}`),
-            pddk : this.pendidikan,
-            reservasi : 0,
-            status : 'user',
-        }).catch((err) => {
-                // eslint-disable-next-line
-                alert('opps', err.message);
-                return;
-            });
-        this.$router.push('/');
+      }
+      ).catch((err) => {
+        // eslint-disable-next-line
+        alert('opps', err.message);
+        return;
+      });
+      await auth.createUserWithEmailAndPassword(this.email, this.pass)
+      .then((snapshot) => {
+        // eslint-disable-next-line
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+        alert('opps', err.message);
+        return;
+      });
+      let uid = auth.currentUser.uid;
+      let user= auth.currentUser;
+      user.updateProfile({
+              photoURL: imgurl,
+              displayName: this.nama,
+              })
+          .catch((err) => {
+              // eslint-disable-next-line
+              alert('opps', err.message);
+              return;
+          });
+      await db_real.ref('users/'+uid).set({
+          picUrl: imgurl,
+          email: this.email,
+          nama: this.nama,
+          hp: this.hp,
+          wali: this.wali,
+          tmpt: this.tempat,
+          tgl: new Date(`${this.year}-${this.month}-${this.day}`),
+          pddk: this.pendidikan,
+          reservasi: 0,
+          status: 'user',
+      }).catch((err) => {
+        // eslint-disable-next-line
+        alert('opps', err.message);
+        return null;
+      });
+      this.$router.push('/');
     },
-    nextpage(event){
+    nextpage(event) {
       event.preventDefault();
       event.target.classList.add('was-validated');
-      if(document.querySelectorAll('.form-control:invalid').length == 0){
-            this.registerUser();
+      if (document.querySelectorAll('.form-control:invalid').length === 0) {
+        this.registerUser();
       }
     },
-    next(event){
-        document.querySelector('.needs-validation').classList.add('was-validated');
-        if(document.querySelectorAll('.form-control:invalid').length == 0){
-            this.page=true;
-        }
+    next() {
+      document.querySelector('.needs-validation').classList.add('was-validated');
+      if (document.querySelectorAll('.form-control:invalid').length === 0) {
+        this.page = true;
+      }
     },
-    onFileChange(event){
-      this.file = null,
+    onFileChange(event) {
+      this.file = null;
       this.file = event.target.files || event.dataTransfer.files;
     },
-    day_change(){
-        this.data_day=[];
-        let max=28;
-        if ( this.month === '2' ){
-            if ( this.year % 4 == 0){
-                max=29;
-            }
-            for(let i = 1; i <= max; i++ ){
-                this.data_day.push(i);
-            }
-        }else{
-            if ( this.month === '1' || this.month === '3' || this.month === '5' ||
-            this.month === '7' || this.month === '8' || this.month === '10' ||
-            this.month === '12'){
-                for(let i = 1; i <= 31; i++ ){
-                this.data_day.push(i)
-                }
-            }else{
-                for(let i = 1; i <= 30; i++ ){
-                this.data_day.push(i)
-                }
-            }
+    day_change() {
+      this.data_day = [];
+      let max = 28;
+      if (this.month === '2') {
+        if (this.year % 4 === 0) {
+          max = 29;
         }
-    }   
+        for (let i = 1; i <= max; i += 1) {
+          this.data_day.push(i);
+        }
+      } else if (this.month === '1' || this.month === '3' || this.month === '5'
+        || this.month === '7' || this.month === '8' || this.month === '10'
+        || this.month === '12') {
+        for (let i = 1; i <= 31; i += 1) {
+          this.data_day.push(i);
+        }
+      } else {
+        for (let i = 1; i <= 30; i += 1) {
+          this.data_day.push(i);
+        }
+      }
+    },
   },
 };
 </script>

@@ -46,24 +46,24 @@ export default {
   }),
   methods: {
     async signIn() {
-        let status=null;
-        await auth.signInWithEmailAndPassword(this.email, this.password)
-        .catch((err) => {
-          // eslint-disable-next-line
-          alert(`opps ${err.message}`);
+      let status=null;
+      await auth.signInWithEmailAndPassword(this.email, this.password)
+      .catch((err) => {
+        // eslint-disable-next-line
+        alert(`opps ${err.message}`);
+      });
+      await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
+        status = s.val().status;
+      });
+      if ( status === 'admin') {
+        alert(`You are logged in as ${this.email}`);
+        this.$router.push('/');
+      } else {
+        await auth.signOut().then(() => {
+          this.$router.push('/login');
+          alert('User Not Found');
         });
-        await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
-            status = s.val().status;
-        });
-        if ( status === 'admin'){
-          alert(`You are logged in as ${this.email}`);
-          this.$router.push('/');
-        }else{
-            await auth.signOut().then(() => {
-              this.$router.push('/login');
-              alert('User Not Found');
-          });
-        }
+      }
     },
   },
   props: {

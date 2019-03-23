@@ -163,6 +163,7 @@ export default {
               && msg[i].author !== this.authUser.email)
                 || (this.sorted[j].chatUser === msg[i].sendto
                 && msg[i].sendto !== this.authUser.email)) {
+                console.log(this.sorted)
                 this.sorted[j].chat.push(msg[i]);
                 found = true;
               }
@@ -173,7 +174,7 @@ export default {
                   this.sorted.push({ userName:msg[i].authorName, chatUser: msg[i].author, chat: [msg[i]],});
                 }
                 else{
-                  this.sorted.push({ userName:msg[i].sendtoName, chatUser: msg[i].author, chat: [msg[i]],});
+                  this.sorted.push({ userName:msg[i].sendtoName, chatUser: msg[i].sendto, chat: [msg[i]],});
                 }
               } else {
                 if(status==='admin'){
@@ -216,7 +217,7 @@ export default {
         .onSnapshot((querySanpshot) => {
           let allMessage = [];
           querySanpshot.forEach((doc) => {
-            if(doc.data().sendto === user){
+            if (doc.data().sendto === user || doc.data().author === user) {
               allMessage.push(doc.data());
             }
           });
