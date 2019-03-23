@@ -130,7 +130,7 @@ export default {
           result.setDate(result.getDate() + 2);
           console.log(result.getDate());
           let hasil=
-          `${result.getDate()} ${monthNames[result.getMonth()]} ${result.getFullYear()} ${result.getHours()}:${result.getMinutes()} WIB`
+          `${result.getDate()} ${monthNames[result.getMonth()]} ${result.getFullYear()} ${result.getHours()}:${result.getMinutes()}`
           return hasil; 
     },
     async paynow(){

@@ -95,8 +95,8 @@
                 <img src="@/assets/Mask_Group_1.png" alt="">
             </div>
             <div class="label-desc">
-                <h5>Jagar Manjensen</h5>
-                <p>Psikologi Pendidikan</p>
+                <h5>Jager Manjensen</h5>
+                <p>Educational Psychology</p>
             </div>
           </div>
           <div @click="docUser('admin2@admin.com')" class="form-check-label doctor">
@@ -104,8 +104,8 @@
                 <img src="@/assets/Mask_Group_1.png" alt="">
             </div>
             <div class="label-desc">
-                <h5>Jagar Manjensen</h5>
-                <p>Psikologi Pendidikan</p>
+                <h5>John Doe</h5>
+                <p>General Psychology</p>
             </div>
           </div>
         </div>
@@ -203,6 +203,9 @@ export default {
       }
       if (this.selectedUser === null){
         this.selectedUser = this.sorted[0].chatUser;
+      }else if (this.selectedUser && this.sorted.length == 0) {
+        console.log('kosong')
+        this.sorted.push({userName: this.selectedUser==='admin@admin.com' ? 'Jager Manjensen':'John Doe', chatUser: this.selectedUser,})
       }
     },
     fetchMessageAdmin() {
@@ -264,6 +267,7 @@ body,html{height:100%; width: 100%;}
 .container{max-width:1170px; margin:auto;}
 img{ max-width:100%;}
 .box{
+  margin-top:70px;
     color: #1a1a1a;
     display: flex;
     flex-direction:column;
@@ -276,6 +280,9 @@ img{ max-width:100%;}
 .box_content{
   display: flex;
   flex-direction: row;
+}
+.label-desc p{
+  font-size: 13px;
 }
 .form-check-label{
     padding: 20px;

@@ -7,12 +7,12 @@
             :key="idx"
             class="box">
                 <div class="box-img">
-                    <img class="pic_img" src="@/assets/Mask_Group_1.png" alt="">
+                    <img v-bind:src="resvArr[idx].url" class="pic_img rounded-circle" alt="profpict">
                 </div>
                 <div class="box-desc">
                     <div>
-                        <h5>{{arr.nama}}</h5>
-                        <span>{{arr.waktu}}</span>
+                        <h5>{{arr.data.nama}}</h5>
+                        <span>{{arr.data.waktu}}</span>
                     </div>
                     <div class="alamat">
                         <b>Location:</b>
@@ -20,7 +20,20 @@
                         <span>Jl. Terusan Buah Batu No.01, Sukapura,</span>
                         <span>Dayeuhkolot, Bandung, Jawa Barat 40257</span>
                     </div>
-                </div>                       
+                </div>
+                <div v-if="arr.data.status === 'wait'" class="box-validation">
+                    <span>Status:</span>
+                    <span>{{arr.data.status}}</span>
+                    <button @click="changeStatus(arr)" class="btn btn-primary">Verify</button>
+                </div>
+                <div v-else-if="arr.data.status === 'accept'" class="box-validation">
+                    <span>Status:</span>
+                    <button @click="changeStatus(arr)" class="btn btn-success" disabled>Accept</button>
+                </div>
+                <div v-else class="box-validation">
+                    <span>Status:</span>
+                    <button @click="changeStatus(arr)" class="btn btn-danger" disabled>Expire</button>
+                </div>                      
             </div>
         </dir>
     </div>
@@ -29,12 +42,23 @@
 <script>
 // @ is an alias to /src
 import {auth, db_real} from '@/firebase/firebaseInit'
+import { async } from 'q';
 export default {
   name: 'consulOffData',
   data:()=>({
       resvArr:[],
   }),
   methods: {
+      async changeStatus(arr){
+          arr.data.status = "accept";
+          await db_real.ref('reservasi/'+arr.key).update({
+                        status : 'accept',
+                    }).catch((err) => {
+                        // eslint-disable-next-line
+                        alert('opps', err.message);
+                        return;
+                    });
+      },
       test(){
         let user = auth.currentUser;
         user.updateProfile({
@@ -51,18 +75,53 @@ export default {
         let user = auth.currentUser.displayName;
         await db_real.ref('reservasi/').once('value').then((s) => {
             //console.log(s.val())
-            s.forEach(function(childS) {
-                console.log(auth.currentUser.displayName)
-                let data = childS.val();
-                if (data.dokter === auth.currentUser.displayName){
-                    arr.push(data);
+            s.forEach((childS) => {
+                let dataa = childS.val();
+                let imgurl;
+                // await db_real.ref('users/'+dataa.uid).once('value').then((snap) => {
+                //     imgurl = snap.val().picUrl;
+                // });
+                if (dataa.dokter === auth.currentUser.displayName){
+                    arr.push({data: dataa,key: childS.key});
                 }
             })
         });
-        console.log(arr);
         this.resvArr=arr;
-        console.log(this.resvArr)
-      }
+        this.checkExpire();
+      },
+      async checkExpire(){
+          let arr = this.resvArr;
+          let dateNow = new Date();
+          arr.forEach(async (dataArr)=>{
+              let dateTrans = new Date(dataArr.data.date)
+              if (dataArr.data.status === 'wait'){
+                if (dateTrans <= dateNow){
+                    dataArr.data.status = 'expire';
+                        await db_real.ref('reservasi/'+dataArr.key).update({
+                            status : 'expire',
+                        }).catch((err) => {
+                            // eslint-disable-next-line
+                            alert('opps', err.message);
+                            return;
+                        });
+                }
+              }
+          });
+          this.resvArr = arr;
+          this.getUserImg();
+      },
+      async getUserImg(){
+          let arr = this.resvArr;
+          arr.forEach(async (dataArr)=>{
+              let imgurl
+              await db_real.ref('users/'+dataArr.data.uid).once('value').then((snap) => {
+                    imgurl = snap.val().picUrl;
+                });
+              dataArr.url = imgurl;
+          });
+          this.resvArr = arr;
+        
+      },
   },
   created(){
       this.getData();
@@ -88,14 +147,21 @@ body,html{height:100%; width: 100%;}
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     min-width: 600px;
 }
 .box-img .pic_img{
     width: 90px;
+    height: 90px;
 }
 .box-desc{
-    margin-left: 20px;
+
     display: flex;
     flex-direction: column;
+}
+.box-validation{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 </style>
