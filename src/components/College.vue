@@ -125,64 +125,30 @@ export default {
           {
             second: [
               {
-                value: 'Answer 1',
+                value: 'Informatics',
               },
               {
-                value: 'Answer 2',
-              },
-            ],
-          },
-          {
-            second: [
-              {
-                value: 'Answer 3',
-              },
-              {
-                value: 'Answer 4',
+                value: 'Industrial Engineering',
               },
             ],
           },
           {
             second: [
               {
-                value: 'Answer 5',
+                value: 'Management',
               },
               {
-                value: 'Answer 6',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        first: [
-          {
-            second: [
-              {
-                value: 'Answer 7',
-              },
-              {
-                value: 'Answer 8',
+                value: 'Multimedia',
               },
             ],
           },
           {
             second: [
               {
-                value: 'Answer 9',
+                value: 'Psychology',
               },
               {
-                value: 'Answer 10',
-              },
-            ],
-          },
-          {
-            second: [
-              {
-                value: 'Answer 11',
-              },
-              {
-                value: 'Answer 12',
+                value: 'Computer Science',
               },
             ],
           },
@@ -193,30 +159,64 @@ export default {
           {
             second: [
               {
-                value: 'Answer 13',
+                value: 'Psychology',
               },
               {
-                value: 'Answer 14',
-              },
-            ],
-          },
-          {
-            second: [
-              {
-                value: 'Answer 15',
-              },
-              {
-                value: 'Answer 16',
+                value: 'Computer Science',
               },
             ],
           },
           {
             second: [
               {
-                value: 'Answer 17',
+                value: 'Management',
               },
               {
-                value: 'Answer 18',
+                value: 'Multimedia',
+              },
+            ],
+          },
+          {
+            second: [
+              {
+                value: 'Informatics',
+              },
+              {
+                value: 'Industrial Engineering',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        first: [
+          {
+            second: [
+              {
+                value: 'Management',
+              },
+              {
+                value: 'Multimedia',
+              },
+            ],
+          },
+          {
+            second: [
+              {
+                value: 'Informatics',
+              },
+              {
+                value: 'Industrial Engineering',
+              },
+            ],
+          },
+          {
+            second: [
+              {
+                value: 'Psychology',
+              },
+              {
+                value: 'Computer Science',
               },
             ],
           },

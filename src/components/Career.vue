@@ -125,56 +125,26 @@ export default {
           {
             second: [
               {
-                value: 'Answer 1',
+                value: 'Software Engineering',
               },
               {
-                value: 'Answer 2',
+                value: 'International Relations',
               },
               {
-                value: 'Answer 3',
-              },
-            ],
-          },
-          {
-            second: [
-              {
-                value: 'Answer 4',
-              },
-              {
-                value: 'Answer 5',
-              },
-              {
-                value: 'Answer 6',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        first: [
-          {
-            second: [
-              {
-                value: 'Answer 7',
-              },
-              {
-                value: 'Answer 8',
-              },
-              {
-                value: 'Answer 9',
+                value: 'UI/UX',
               },
             ],
           },
           {
             second: [
               {
-                value: 'Answer 10',
+                value: 'General Psychology',
               },
               {
-                value: 'Answer 11',
+                value: 'Industrial Management',
               },
               {
-                value: 'Answer 12',
+                value: 'Contractor',
               },
             ],
           },
@@ -185,26 +155,56 @@ export default {
           {
             second: [
               {
-                value: 'Answer 13',
+                value: 'Software Engineering',
               },
               {
-                value: 'Answer 14',
+                value: 'International Relations',
               },
               {
-                value: 'Answer 15',
+                value: 'UI/UX',
               },
             ],
           },
           {
             second: [
               {
-                value: 'Answer 16',
+                value: 'General Psychology',
               },
               {
-                value: 'Answer 17',
+                value: 'Industrial Management',
               },
               {
-                value: 'Answer 18',
+                value: 'Contractor',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        first: [
+          {
+            second: [
+              {
+                value: 'General Psychology',
+              },
+              {
+                value: 'Industrial Management',
+              },
+              {
+                value: 'Contractor',
+              },
+            ],
+          },
+          {
+            second: [
+              {
+                value: 'Software Engineering',
+              },
+              {
+                value: 'International Relations',
+              },
+              {
+                value: 'UI/UX',
               },
             ],
           },

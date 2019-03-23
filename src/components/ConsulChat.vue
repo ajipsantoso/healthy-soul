@@ -75,7 +75,7 @@
                             <div class="input_msg_write">
                             <input @keyup.enter="saveMessage" v-model="message"
                             type="text" class="write_msg"
-                            placeholder="Type a message" />
+                            placeholder="Type a message" :disabled="disableChat"/>
                             <button @click="saveMessage" class="msg_send_btn" type="button">
                                 <font-awesome-icon icon="paper-plane"/></button>
                             </div>
@@ -127,6 +127,7 @@ export default {
     sorted: [],
     authUser: {},
     selectedUser: null,
+    disableChat: false,
     chooseDoctor: true,
   }),
   methods: {
@@ -139,7 +140,6 @@ export default {
       let docName;
       await db_real.ref('users/').orderByChild('email').equalTo(this.selectedUser).once('value').then((s) => {
         s.forEach(function(data) {
-            console.log(data.val());
             docName=data.val().nama
         });
       });
@@ -152,36 +152,23 @@ export default {
         sendto: this.selectedUser,
       });
       this.message = null;
-      console.log(this.selectedUser);
     },
     sortMessage(msg,status) {
       this.sorted = [];
       for (let i = 0; i < msg.length; i += 1) {
         if (msg[i].author === this.authUser.email || msg[i].sendto === this.authUser.email) {
-          // if (this.sorted.length === 0) {
-          //   if (msg[i].author !== this.authUser.email) {
-          //     console.log('test1')
-          //     this.sorted.push({ chatUser: msg[i].author, chat: [msg[i]],});
-          //   } else {
-          //     console.log('test2')
-          //     this.sorted.push({ chatUser: msg[i].sendto, chat: [msg[i]],});
-          //   }
-          // } else {
             let found = false;
             for (let j = 0; j < this.sorted.length; j += 1) {
               if ((this.sorted[j].chatUser === msg[i].author
               && msg[i].author !== this.authUser.email)
                 || (this.sorted[j].chatUser === msg[i].sendto
                 && msg[i].sendto !== this.authUser.email)) {
-                  console.log('test3',msg[i])
                 this.sorted[j].chat.push(msg[i]);
-                console.log(this.sorted)
                 found = true;
               }
             }
             if (found === false) {
               if (msg[i].author !== this.authUser.email) {
-                console.log('test4')
                 if(status==='admin'){
                   this.sorted.push({ userName:msg[i].authorName, chatUser: msg[i].author, chat: [msg[i]],});
                 }
@@ -189,7 +176,6 @@ export default {
                   this.sorted.push({ userName:msg[i].sendtoName, chatUser: msg[i].author, chat: [msg[i]],});
                 }
               } else {
-                console.log('test5')
                 if(status==='admin'){
                   this.sorted.push({ userName:msg[i].authorName, chatUser: msg[i].author, chat: [msg[i]],});
                 }
@@ -198,13 +184,18 @@ export default {
                 }
               }
             }
-          // }
         }
       }
       if (this.selectedUser === null){
-        this.selectedUser = this.sorted[0].chatUser;
+        if(this.chooseDoctor === false){
+          if (this.sorted.length > 0){
+            this.selectedUser = this.sorted[0].chatUser;
+          }
+          else{
+            this.disableChat = true;
+          }
+        }
       }else if (this.selectedUser && this.sorted.length == 0) {
-        console.log('kosong')
         this.sorted.push({userName: this.selectedUser==='admin@admin.com' ? 'Jager Manjensen':'John Doe', chatUser: this.selectedUser,})
       }
     },
@@ -244,7 +235,6 @@ export default {
         this.fetchMessageAdmin();
       }else{
         this.chooseDoctor = true;
-        //this.fetchMessage();
       }
     }
   },
@@ -257,7 +247,6 @@ export default {
       }
     });
     this.checkUser();
-    //this.fetchMessage();
   },
 };
 </script>

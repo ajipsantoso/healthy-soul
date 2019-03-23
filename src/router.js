@@ -85,6 +85,14 @@ const router = new Router({
       },
     },
     {
+      path: '/login-admin',
+      name: 'login-admin',
+      component: () => import(/* webpackChunkName: "Home" */ './views/Login_admin.vue'),
+      meta: {
+        requiresGuest: true,
+      },
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import(/* webpackChunkName: "Home" */ './views/Register.vue'),

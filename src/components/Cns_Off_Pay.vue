@@ -86,10 +86,12 @@
         </div>
         <div class="box" v-else>
             <div class="box_title">
-                <span class="title">Transaction Expire</span>
+                <span v-if="noTransaction" class="title">No Transaction Found</span>
+                <span v-else class="title">Transaction Expire</span>
             </div>
             <div class="box_content">
-                <span>Your last transaction was expire</span>
+                <span v-if="noTransaction">There's no transaction found</span>
+                <span v-else>Your last transaction was expire</span>
                 <button @click="goConsul"
                 class="btn btn-primary">New Transaction
                 </button>
@@ -114,6 +116,7 @@ export default {
       choose: true,
       tanggal: '',
       expire: false,
+      noTransaction: false,
   }),
   computed:{
       
@@ -128,7 +131,7 @@ export default {
           ];
           let result= new Date();
           result.setDate(result.getDate() + 2);
-          console.log(result.getDate());
+        //   console.log(result.getDate());
           let hasil=
           `${result.getDate()} ${monthNames[result.getMonth()]} ${result.getFullYear()} ${result.getHours()}:${result.getMinutes()}`
           return hasil; 
@@ -163,14 +166,36 @@ export default {
         });
         localStorage.setItem('transaksi', JSON.stringify({biaya:this.biaya, gate:this.gate_pay, tanggal:this.tanggal}));
     },
+    async expireT(){
+        await db_real.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
+            s.forEach(async function(childSnapshot) {
+                await db_real.ref('reservasi/'+childSnapshot.key).update({
+                    status : 'expire',
+                }).catch((err) => {
+                    // eslint-disable-next-line
+                    alert('opps', err.message);
+                    return;
+                });
+            });
+        });
+    }
   },
   created(){
     if (localStorage.transaksi){
-        this.choose = false;
         let data = JSON.parse(localStorage.getItem('transaksi'));
-        this.biaya = data.biaya;
-        this.gate_pay = data.gate;
-        this.tanggal = data.tanggal;
+        let dateNow = new Date();
+        let date = new Date(data.tanggal);
+        if (date < dateNow) {
+            this.choose=false;
+            this.expire=true;
+            localStorage.clear();
+            localStorage.setItem('expire', true);
+        }else{
+            this.choose = false;
+            this.biaya = data.biaya;
+            this.gate_pay = data.gate;
+            this.tanggal = data.tanggal;
+        }
     }else{
         if(this.consul){
             this.tanggal = this.setTanggal();
@@ -180,12 +205,14 @@ export default {
             this.biaya = (500000 + ratus + puluh + satuan).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
         }else{
             let check = JSON.parse(localStorage.getItem('expire'));
-            console.log(check);
+            // console.log(check);
             if (check){
                 this.choose=false;
                 this.expire=true;
             }else if(check === null){
-                this.$router.push({ name: 'consul-off'});
+                this.choose=false;
+                this.expire=true;
+                this.noTransaction=true;
             } 
         }
     }

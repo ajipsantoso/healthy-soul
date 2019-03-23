@@ -1,7 +1,7 @@
 <template>
     <div class="consulOffData">
         <dir class="container">
-            <!-- <button @click="test">awdwad</button> -->
+            <button @click="test">awdwad</button>
             <div
             v-for="(arr,idx) in resvArr"
             :key="idx"
@@ -62,7 +62,7 @@ export default {
       test(){
         let user = auth.currentUser;
         user.updateProfile({
-                displayName: 'John Doe',
+                photoURL: 'https://firebasestorage.googleapis.com/v0/b/chattingapp-454b2.appspot.com/o/image%2FadminPic.png?alt=media&token=4b03d345-14d4-435e-9437-f8913ceac9c6',
                 })
             .catch((err) => {
                 // eslint-disable-next-line
@@ -86,6 +86,13 @@ export default {
                 }
             })
         });
+        for (let i = 0; i<arr.length; i++){
+            let imgurl
+            await db_real.ref('users/'+arr[i].data.uid).once('value').then((snap) => {
+                imgurl = snap.val().picUrl;
+            });
+            arr[i].url = imgurl;
+        }
         this.resvArr=arr;
         this.checkExpire();
       },
@@ -108,7 +115,7 @@ export default {
               }
           });
           this.resvArr = arr;
-          this.getUserImg();
+          
       },
       async getUserImg(){
           let arr = this.resvArr;
@@ -120,7 +127,7 @@ export default {
               dataArr.url = imgurl;
           });
           this.resvArr = arr;
-        
+          this.checkExpire();
       },
   },
   created(){

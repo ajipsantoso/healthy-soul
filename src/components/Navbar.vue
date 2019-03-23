@@ -7,7 +7,7 @@
         </div>
         <div class="logo_r">
           <div class="logo_txt">
-            Healty Soul
+            <b>HEALTHY SOUL</b>
           </div>
         </div>
       </div>

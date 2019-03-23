@@ -8,7 +8,7 @@
                                     <img class="img-fluid card-img"
                                     src="@/assets/consul_1.png" alt="Card image">
                                     <div class="card-img-overlay">
-                                        <h3 class="card-title">Offline Consultation</h3>
+                                      <h3 class="card-title">Offline Consultation</h3>
                                     </div>
                             </div>
                             <div @click="goConsulChat('on')"

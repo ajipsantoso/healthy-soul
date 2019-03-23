@@ -2,11 +2,11 @@
   <div class="login">
       <div class="box">
           <div class="box_title">
-                  LOGIN USER
+            <span>LOGIN USER</span>
+            <span><b>HEALTHY SOUL</b></span>
           </div>
           <div class="box_content">
               <div class="form-group">
-                  <label for="exampleInputEmail1"></label>
                   <input @keyup.enter="signIn()" v-model="email"
                   type="email"
                   class="form-control"
@@ -16,7 +16,6 @@
                   required>
               </div>
               <div class="form-group">
-                  <label  for="exampleInputPassword1"></label>
                   <input @keyup.enter="signIn()" v-model="password"
                   type="password"
                   class="form-control"
@@ -29,7 +28,7 @@
                       <button @click="signIn()" type="submit" class="btn btn-primary">
                         Login
                       </button>
-                      <router-link to="/register"><span>REGISTER</span></router-link>
+                      <router-link to="/register"><span style="margin-left:10px;font-size:15px">REGISTER</span></router-link>
                   </div>
                   <div class="submit-right">
                       <a class="forgot" href="#"><span>Forget password?</span></a>
@@ -50,17 +49,12 @@ export default {
     password: '',
   }),
   methods: {
-    async makeunvalidate(key){
-      console.log('masuk')
-      
-    },
     async getPayment(){
       let data = '';
       await db_real.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
             s.forEach(async function(childSnapshot) {
             let childData = childSnapshot.val();
             let id=childData.id;
-            console.log(childData);
             if (childData.status === 'wait'){
               let checkDate = new Date(childData.date);
               let today =  new Date();
@@ -83,19 +77,27 @@ export default {
             });
       });
     },
-    signIn() {
-      auth.signInWithEmailAndPassword(this.email, this.password)
-        .then((snap) => {
+    async signIn() {
+      let status=null;
+      await auth.signInWithEmailAndPassword(this.email, this.password)
+        .catch((err) => {
           // eslint-disable-next-line
-          console.log(snap.user.uid)
+          alert(`Opps. ${err.message}`);
+          return;
+        });
+        await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
+            status = s.val().status;
+        });
+        if ( status === 'user'){
           this.getPayment();
           alert(`You are logged in as ${this.email}`);
           this.$router.push('/');
-        })
-        .catch((err) => {
-          // eslint-disable-next-line
-          alert('opps', err.message);
-        });
+        }else{
+          await auth.signOut().then(() => {
+              this.$router.push('/login');
+              alert('User Not Found');
+          });
+        }
     },
   },
   props: {
@@ -119,14 +121,19 @@ html,body{
     height: 100%;
 }
 .box_title{
-    margin-bottom: 18px;
     font-size: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .box_content{
     width: 75%;
 }
 .form-control{
     background-color: #c7c7c7;
+}
+.form-group{
+    margin: 20px 0;
 }
 .form-submit{
     display: flex;
