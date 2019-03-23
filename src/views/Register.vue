@@ -8,7 +8,7 @@
               <form class="needs-validation" novalidate @submit="nextpage">
                 <div v-if="page == false">
                     <div class="form-group">
-                        <label for="inp-username">Username</label>
+                        <label for="inp-username">Username<sup>*</sup></label>
                         <input v-model="username"
                         type="text"
                         class="form-control"
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inp-email">Email</label>
+                        <label for="inp-email">Email<sup>*</sup></label>
                         <input v-model="email"
                         type="email"
                         class="form-control"
@@ -29,7 +29,7 @@
                             Please provide a valid Email.
                         </div>
                     </div><div class="form-group">
-                        <label for="inp-password">Password</label>
+                        <label for="inp-password">Password<sup>*</sup></label>
                         <input v-model="pass"
                         type="password"
                         class="form-control"
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inp-nama">Nama</label>
+                        <label for="inp-nama">Nama<sup>*</sup></label>
                         <input v-model="nama"
                         type="text"
                         class="form-control"
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inp-hp">Nomor Hp</label>
+                        <label for="inp-hp">Nomor Hp<sup>*</sup></label>
                         <input v-model="hp"
                         type="number"
                         class="form-control"
@@ -77,7 +77,7 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label>Tempat, Tanggal Lahir</label>
+                        <label>Tempat, Tanggal Lahir<sup>*</sup></label>
                         <div class="form-row">
                             <input v-model="tempat"
                             type="text"
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="customFile">Upload foto 3x4 (minimal 3 bulan terakhir)</label>
+                        <label for="customFile">Upload photo 3x4 (minimal 3 bulan terakhir) max 100kb<sup>*</sup></label>
                         <div class="custom-file">
                             <input type="file" class="form-control" id="customFile" name="filename"
                             @change="onFileChange" @click="file[0].name=''" required
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="jenjang">Jenjang Pendidikan</label>
+                        <label for="jenjang">Jenjang Pendidikan<sup>*</sup></label>
                         <select v-model="pendidikan" class="custom-select browser-default" id="jenjang" required>
                             <option selected="selected" disabled value="">Pendidikan</option>
                             <option v-for="(study, idx) in data_study" :key="idx">{{ study }}</option>
@@ -277,6 +277,9 @@ export default {
 html,body{
   height: 100%;
   width: 100%;
+}
+sup{
+    color: red;
 }
 .register{
     margin: 0 auto;

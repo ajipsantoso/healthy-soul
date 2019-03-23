@@ -1,7 +1,6 @@
 <template>
     <div class="consulOffData">
         <dir class="container">
-            <button @click="test">awdwad</button>
             <div
             v-for="(arr,idx) in resvArr"
             :key="idx"
@@ -59,17 +58,6 @@ export default {
                         return;
                     });
       },
-      test(){
-        let user = auth.currentUser;
-        user.updateProfile({
-                photoURL: 'https://firebasestorage.googleapis.com/v0/b/chattingapp-454b2.appspot.com/o/image%2FadminPic.png?alt=media&token=4b03d345-14d4-435e-9437-f8913ceac9c6',
-                })
-            .catch((err) => {
-                // eslint-disable-next-line
-                alert('opps', err.message);
-                return;
-            });
-      },
       async getData(){
         let arr=[];
         let user = auth.currentUser.displayName;
@@ -94,6 +82,7 @@ export default {
             arr[i].url = imgurl;
         }
         this.resvArr=arr;
+        this.resvArr=this.resvArr.reverse();
         this.checkExpire();
       },
       async checkExpire(){
