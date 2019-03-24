@@ -28,7 +28,9 @@
                       <button @click="signIn()" type="submit" class="btn btn-primary">
                         Login
                       </button>
-                      <router-link to="/register"><span style="margin-left:10px;font-size:15px">REGISTER</span></router-link>
+                      <router-link to="/register">
+                        <span style="margin-left:10px;font-size:15px">REGISTER</span>
+                      </router-link>
                   </div>
                   <div class="submit-right">
                       <a class="forgot" href="#"><span>Forget password?</span></a>
@@ -40,7 +42,7 @@
 </template>
 
 <script>
-import { auth, db_real } from '../firebase/firebaseInit';
+import { auth, dbReal } from '../firebase/firebaseInit';
 
 export default {
   data: () => ({
@@ -49,55 +51,58 @@ export default {
     password: '',
   }),
   methods: {
-    async getPayment(){
-      let data = '';
-      await db_real.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
-            s.forEach(async function(childSnapshot) {
-            let childData = childSnapshot.val();
-            let id=childData.id;
-            if (childData.status === 'wait'){
-              let checkDate = new Date(childData.date);
-              let today =  new Date();
-              if (checkDate > today){
-                localStorage.setItem('transaksi', JSON.stringify({biaya:childData.biaya, gate: childData.gateway, tanggal: childData.date}));
-              }
-              else{
-                localStorage.setItem('expire', true);
-                await db_real.ref('reservasi/'+childSnapshot.key).update({
-                    status : 'expire',
-                }).catch((err) => {
-                    // eslint-disable-next-line
-                    alert('opps', err.message);
-                    return;
-                });
-              }
-            }else if (childData.status === 'expire'){
-              localStorage.setItem('expire', true);
-            }
-            });
-      });
-    },
+    // async getPayment(){
+    //   let data = '';
+    //   await dbReal.ref('reservasi/').orderByChild('uid').
+    // equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
+    //       s.forEach(async function(childSnapshot) {
+    //       let childData = childSnapshot.val();
+    //       let id=childData.id;
+    //       if (childData.status === 'wait') {
+    //         let checkDate = new Date(childData.date);
+    //         let today =  new Date();
+    //         if (checkDate > today) {
+    //           localStorage.setItem('transaksi',
+    // JSON.stringify({biaya:childData.biaya, gate: childData.gateway, tanggal: childData.date}));
+    //         } else{
+    //           localStorage.setItem('expire', true);
+    //           await dbReal.ref(`reservasi/${childSnapshot.key}`).update({
+    //             status: 'expire',
+    //           }).catch((err) => {
+    //             // eslint-disable-next-line
+    //             alert('opps', err.message);
+    //             return null;
+    //           });
+    //         }
+    //       } else if (childData.status === 'expire') {
+    //         localStorage.setItem('expire', true);
+    //       }
+    //     });
+    //   });
+    // },
     async signIn() {
-      let status=null;
+      let stats = null;
       await auth.signInWithEmailAndPassword(this.email, this.password)
         .catch((err) => {
           // eslint-disable-next-line
           alert(`Opps. ${err.message}`);
-          return;
+          return null;
         });
-        await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
-            status = s.val().status;
+      await dbReal.ref(`/users/${auth.currentUser.uid}`).once('value').then((s) => {
+        stats = s.val().status;
+      });
+      if (stats === 'user') {
+        // this.getPayment();
+        // eslint-disable-next-line
+        alert(`You are logged in as ${this.email}`);
+        this.$router.push('/');
+      } else {
+        await auth.signOut().then(() => {
+          this.$router.push('/login');
+          // eslint-disable-next-line
+          alert('User Not Found');
         });
-        if ( status === 'user'){
-          this.getPayment();
-          alert(`You are logged in as ${this.email}`);
-          this.$router.push('/');
-        }else{
-          await auth.signOut().then(() => {
-              this.$router.push('/login');
-              alert('User Not Found');
-          });
-        }
+      }
     },
   },
   props: {

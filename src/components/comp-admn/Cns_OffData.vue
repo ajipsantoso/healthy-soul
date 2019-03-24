@@ -6,7 +6,9 @@
             :key="idx"
             class="box">
                 <div class="box-img">
-                    <img v-bind:src="resvArr[idx].url" class="pic_img rounded-circle" alt="profpict">
+                    <img v-bind:src="resvArr[idx].url"
+                    class="pic_img rounded-circle"
+                    alt="profpict">
                 </div>
                 <div class="box-desc">
                     <div>
@@ -23,16 +25,20 @@
                 <div v-if="arr.data.status === 'wait'" class="box-validation">
                     <span>Status:</span>
                     <span>{{arr.data.status}}</span>
-                    <button @click="changeStatus(arr)" class="btn btn-primary">Verify</button>
+                    <button @click="changeStatus(idx)" class="btn btn-primary">Verify</button>
                 </div>
                 <div v-else-if="arr.data.status === 'accept'" class="box-validation">
                     <span>Status:</span>
-                    <button @click="changeStatus(arr)" class="btn btn-success" disabled>Accept</button>
+                    <button @click="changeStatus(idx)"
+                    class="btn btn-success"
+                    disabled>Accept</button>
                 </div>
                 <div v-else class="box-validation">
                     <span>Status:</span>
-                    <button @click="changeStatus(arr)" class="btn btn-danger" disabled>Expire</button>
-                </div>                      
+                    <button @click="changeStatus(idx)"
+                    class="btn btn-danger"
+                    disabled>Expire</button>
+                </div>
             </div>
         </dir>
     </div>
@@ -40,87 +46,77 @@
 
 <script>
 // @ is an alias to /src
-import {auth, db_real} from '@/firebase/firebaseInit'
+import { auth, dbReal } from '@/firebase/firebaseInit';
 
 export default {
   name: 'consulOffData',
-  data:()=>({
-      resvArr:[],
+  data: () => ({
+    resvArr: [],
   }),
   methods: {
-      async changeStatus(arr){
-          arr.data.status = "accept";
-          await db_real.ref('reservasi/'+arr.key).update({
-                        status : 'accept',
-                    }).catch((err) => {
-                        // eslint-disable-next-line
-                        alert('opps', err.message);
-                        return;
-                    });
-      },
-      async getData(){
-        let arr=[];
-        let user = auth.currentUser.displayName;
-        await db_real.ref('reservasi/').once('value').then((s) => {
-            //console.log(s.val())
-            s.forEach((childS) => {
-                let dataa = childS.val();
-                let imgurl;
-                // await db_real.ref('users/'+dataa.uid).once('value').then((snap) => {
-                //     imgurl = snap.val().picUrl;
-                // });
-                if (dataa.dokter === auth.currentUser.displayName){
-                    arr.push({data: dataa,key: childS.key});
-                }
-            })
+    async changeStatus(idx) {
+      const arr = this.resvArr[idx];
+      arr.data.status = 'accept';
+      await dbReal.ref(`reservasi/${arr.key}`).update({
+        status: 'accept',
+      }).catch((err) => {
+        // eslint-disable-next-line
+        alert('opps', err.message);
+        return null;
+      });
+    },
+    async getData() {
+      const arr = [];
+      await dbReal.ref('reservasi/').once('value').then((s) => {
+        s.forEach((childS) => {
+          const dataa = childS.val();
+          if (dataa.dokter === auth.currentUser.displayName) {
+            arr.push({ data: dataa, key: childS.key, url: '' });
+          }
         });
-        for (let i = 0; i<arr.length; i++){
-            let imgurl
-            await db_real.ref('users/'+arr[i].data.uid).once('value').then((snap) => {
-                imgurl = snap.val().picUrl;
+      });
+      for (let i = 0; i < arr.length; i += 1) {
+        dbReal.ref(`users/${arr[i].data.uid}`).once('value').then((snap) => {
+          arr[i].url = snap.val().picUrl;
+        });
+      }
+      this.resvArr = await Promise.all(arr);
+      this.resvArr = this.resvArr.reverse();
+      this.checkExpire();
+    },
+    async checkExpire() {
+      const arr = this.resvArr;
+      const dateNow = new Date();
+      for (let i = 0; i < arr.length; i += 1) {
+        const dateTrans = new Date(arr[i].data.date);
+        if (arr[i].data.status === 'wait') {
+          if (dateTrans <= dateNow) {
+            arr[i].data.status = 'expire';
+            dbReal.ref(`reservasi/${arr[i].key}`).update({
+              status: 'expire',
+            }).catch((err) => {
+              // eslint-disable-next-line
+              alert('opps', err.message);
+              return null;
             });
-            arr[i].url = imgurl;
+          }
         }
-        this.resvArr=arr;
-        this.resvArr=this.resvArr.reverse();
-        this.checkExpire();
-      },
-      async checkExpire(){
-          let arr = this.resvArr;
-          let dateNow = new Date();
-          arr.forEach(async (dataArr)=>{
-              let dateTrans = new Date(dataArr.data.date)
-              if (dataArr.data.status === 'wait'){
-                if (dateTrans <= dateNow){
-                    dataArr.data.status = 'expire';
-                        await db_real.ref('reservasi/'+dataArr.key).update({
-                            status : 'expire',
-                        }).catch((err) => {
-                            // eslint-disable-next-line
-                            alert('opps', err.message);
-                            return;
-                        });
-                }
-              }
-          });
-          this.resvArr = arr;
-          
-      },
-      async getUserImg(){
-          let arr = this.resvArr;
-          arr.forEach(async (dataArr)=>{
-              let imgurl
-              await db_real.ref('users/'+dataArr.data.uid).once('value').then((snap) => {
-                    imgurl = snap.val().picUrl;
-                });
-              dataArr.url = imgurl;
-          });
-          this.resvArr = arr;
-          this.checkExpire();
-      },
+      }
+      this.resvArr = await Promise.all(arr);
+    },
+    async getUserImg() {
+      const arr = this.resvArr;
+      for (let i = 0; i < arr.length; i += 1) {
+        dbReal.ref(`users/${arr[i].data.uid}`).once('value').then((snap) => {
+          arr[i].url = snap.val().picUrl;
+        });
+      }
+      this.resvArr = await Promise.all(arr);
+      this.checkExpire();
+    },
   },
-  created(){
-      this.getData();
+  created() {
+    this.getData();
   },
 };
 </script>

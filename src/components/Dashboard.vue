@@ -54,7 +54,7 @@
 
 <script>
 // @ is an alias to /src
-import { auth, db_real } from '../firebase/firebaseInit.js'
+import { auth, dbReal } from '../firebase/firebaseInit.js'
 export default {
   name: 'dashboard',
   data: () =>({
@@ -64,7 +64,7 @@ export default {
   },
   async created() {
     let status=null;
-    await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
+    await dbReal.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
         status = s.val().status;
     })
     if ( status === 'admin'){

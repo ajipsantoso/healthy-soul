@@ -87,7 +87,9 @@
                             >
                             <span class="slash">&#47;</span>
                             <div class="form-group date">
-                                <select v-model="year" class="custom-select browser-default" required>
+                                <select v-model="year"
+                                class="custom-select browser-default"
+                                required>
                                 <option disabled value="">YY</option>
                                 <option v-for="idx in 70" :key="idx">{{ idx+1939 }}</option>
                                 </select>
@@ -98,17 +100,21 @@
                                 <option selected="selected" disabled value="">MM</option>
                                 <option v-for="m in 12" :key="m">{{ m }}</option>
                                 </select>
-                            </div>    
+                            </div>
                             <div class="form-group date">
-                                <select v-model="day" class="custom-select browser-default" required>
+                                <select v-model="day"
+                                class="custom-select browser-default"
+                                required>
                                 <option selected="selected" disabled value="">DD</option>
                                 <option v-for="(d, idx) in data_day" :key="idx">{{ d }}</option>
                                 </select>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="customFile">Upload photo 3x4 (minimal 3 bulan terakhir) max 100kb<sup>*</sup></label>
+                        <label for="customFile">
+                            Upload photo 3x4 (minimal 3 bulan terakhir) max 100kb<sup>*</sup>
+                        </label>
                         <div class="custom-file">
                             <input type="file" class="form-control" id="customFile" name="filename"
                             @change="onFileChange" @click="file[0].name=''" required
@@ -129,9 +135,13 @@
                     </div>
                     <div class="form-group">
                         <label for="jenjang">Jenjang Pendidikan<sup>*</sup></label>
-                        <select v-model="pendidikan" class="custom-select browser-default" id="jenjang" required>
+                        <select v-model="pendidikan"
+                        class="custom-select browser-default"
+                        id="jenjang"
+                        required>
                             <option selected="selected" disabled value="">Pendidikan</option>
-                            <option v-for="(study, idx) in data_study" :key="idx">{{ study }}</option>
+                            <option v-for="(study, idx) in data_study"
+                            :key="idx">{{ study }}</option>
                         </select>
                     </div>
                     <div class="form-submit">
@@ -147,7 +157,7 @@
 </template>
 
 <script>
-import {auth, storage, db_real, bucket} from '../firebase/firebaseInit';
+import { auth, storage, dbReal } from '../firebase/firebaseInit';
 
 export default {
   data: () => ({
@@ -159,68 +169,66 @@ export default {
     wali: '',
     nama: '',
     hp: '',
-    file: [{name:'',}],
+    file: [{ name: '' }],
     tempat: '',
     day: '',
     month: '',
-    year: '',   
+    year: '',
     pendidikan: '',
-    data_month: ['January','February','March','April','May','June','July','August','September','October','November','December'],
-    data_study: ['SD','SMP','SMA','S1','S2','S3'],
+    data_month: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', 'December'],
+    data_study: ['SD', 'SMP', 'SMA', 'S1', 'S2', 'S3'],
     data_day: [],
   }),
   methods: {
-    async registerUser(){
+    async registerUser() {
       console.log(this.file);
-      let storageRef = storage.ref('image/');
-      let uploadImgref = storageRef.child(this.username+this.file[0].name);
-      let imgurl = null
-      await uploadImgref.put(this.file[0]).then((snapshot) =>{
+      const storageRef = storage.ref('image/');
+      const uploadImgref = storageRef.child(`${this.username}${this.file[0].name}`);
+      let imgurl = null;
+      await uploadImgref.put(this.file[0]).then((snapshot) => {
         console.log(snapshot.ref.location);
         uploadImgref.getDownloadURL().then((url) => {
-          imgurl= url;
+          imgurl = url;
         }).catch((err) => {
           // eslint-disable-next-line
-          alert('opps', err.message);
-          return;
+          alert(`opps ${err.message}`);
+          return null;
         });
-      }
-      ).catch((err) => {
-        // eslint-disable-next-line
-        alert('opps', err.message);
-        return;
-      });
-      await auth.createUserWithEmailAndPassword(this.email, this.pass)
-      .then((snapshot) => {
-        // eslint-disable-next-line
       })
-      .catch((err) => {
-        // eslint-disable-next-line
-        alert('opps', err.message);
-        return;
-      });
-      let uid = auth.currentUser.uid;
-      let user= auth.currentUser;
+        .catch((err) => {
+          // eslint-disable-next-line
+          alert(`opps ${err.message}`);
+          return null;
+        });
+      await auth.createUserWithEmailAndPassword(this.email, this.pass)
+        .catch((err) => {
+          // eslint-disable-next-line
+          alert(`opps ${err.message}`);
+          return null;
+        });
+      const { uid } = auth.currentUser;
+      const user = auth.currentUser;
       user.updateProfile({
-              photoURL: imgurl,
-              displayName: this.nama,
-              })
-          .catch((err) => {
-              // eslint-disable-next-line
-              alert('opps', err.message);
-              return;
-          });
-      await db_real.ref('users/'+uid).set({
-          picUrl: imgurl,
-          email: this.email,
-          nama: this.nama,
-          hp: this.hp,
-          wali: this.wali,
-          tmpt: this.tempat,
-          tgl: `${this.day} ${this.month} ${this.year}`,
-          pddk: this.pendidikan,
-          reservasi: 0,
-          status: 'user',
+        photoURL: imgurl,
+        displayName: this.nama,
+      })
+        .catch((err) => {
+          // eslint-disable-next-line
+          alert('opps', err.message);
+          return null;
+        });
+      await dbReal.ref(`users/${uid}`).set({
+        picUrl: imgurl,
+        email: this.email,
+        nama: this.nama,
+        hp: this.hp,
+        wali: this.wali,
+        tmpt: this.tempat,
+        tgl: `${this.day} ${this.month} ${this.year}`,
+        pddk: this.pendidikan,
+        reservasi: 0,
+        status: 'user',
       }).catch((err) => {
         // eslint-disable-next-line
         alert('opps', err.message);

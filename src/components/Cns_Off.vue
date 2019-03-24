@@ -119,7 +119,7 @@
 
 <script>
 // @ is an alias to /src
-
+import { dbReal } from '../firebase/firebaseInit';
 export default {
   name: 'consul-off',
   components: {
@@ -132,14 +132,24 @@ export default {
       },
   }),
   methods: {
-      onPayment(){
+    onPayment(){
+        if (doctor && time){
           this.$router.push({ name: 'consul-off-bayar', params:{consul: this.consul_data}});
-      },
+        }
+    },
+    async checkTrans(){
+      await dbReal.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
+        s.forEach(async function(childSnapshot) {
+          let child = childSnapshot.val();
+          if (child.status === 'wait') {
+            this.$router.push({ name: 'consul-off-bayar'});
+          }
+        });
+      });
+    },
   },
   created(){
-      if (localStorage.transaksi){
-          this.$router.push({ name: 'consul-off-bayar'});
-      }
+    this.checkTrans();
   },
 };
 </script>

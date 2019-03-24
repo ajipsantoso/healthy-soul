@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { auth, db_real } from '../firebase/firebaseInit';
+import { auth, dbReal } from '../firebase/firebaseInit';
 
 export default {
   data: () => ({
@@ -46,21 +46,23 @@ export default {
   }),
   methods: {
     async signIn() {
-      let status=null;
+      let stats = null;
       await auth.signInWithEmailAndPassword(this.email, this.password)
-      .catch((err) => {
+        .catch((err) => {
+          // eslint-disable-next-line
+          alert(`opps ${err.message}`);
+        });
+      await dbReal.ref(`/users/${auth.currentUser.uid}`).once('value').then((s) => {
+        stats = s.val().status;
+      });
+      if (stats === 'admin') {
         // eslint-disable-next-line
-        alert(`opps ${err.message}`);
-      });
-      await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
-        status = s.val().status;
-      });
-      if ( status === 'admin') {
         alert(`You are logged in as ${this.email}`);
         this.$router.push('/');
       } else {
         await auth.signOut().then(() => {
           this.$router.push('/login');
+          // eslint-disable-next-line
           alert('User Not Found');
         });
       }

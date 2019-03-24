@@ -24,7 +24,10 @@
       <ul class="navbar-nav">
         <li class="nav-item">
             <div @click="goProfile" class="user">
-                <img v-bind:src="authUser.photoURL" alt="profpict" class="rounded-circle" style="width: 50px; height: 50px;">
+                <img v-bind:src="authUser.photoURL"
+                alt="profpict"
+                class="rounded-circle"
+                style="width: 50px; height: 50px;">
                 <span>{{authUser.displayName}}</span>
             </div>
         </li>
@@ -39,7 +42,7 @@
 
 <script>
 
-import { auth, db } from '@/firebase/firebaseInit';
+import { auth } from '@/firebase/firebaseInit';
 
 export default {
   data: () => ({
@@ -65,9 +68,9 @@ export default {
     getEmail() {
       this.authUser = auth.currentUser;
     },
-    goProfile(){
+    goProfile() {
       this.$router.push({ path: '/profile' });
-    }
+    },
   },
   created() {
     this.getEmail();

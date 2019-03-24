@@ -29,34 +29,35 @@
                     <div class="title">Wali</div>
                     <div>: {{user.wali}}</div>
                 </div>
-            </div>                     
+            </div>
         </div>
     </div>
 </template>
 <script>
 // @ is an alias to /src
-import {auth, db_real} from '@/firebase/firebaseInit'
+import { auth, dbReal } from '@/firebase/firebaseInit';
+
 export default {
   name: 'profile',
-  data:()=>({
-      user:'',
+  data: () => ({
+    user: '',
   }),
   methods: {
-      async getUserData(){
-        let userData;
-        await db_real.ref('users/'+auth.currentUser.uid).once('value').then((snap) => {
-            userData = snap.val();
-        })
+    async getUserData() {
+      let userData;
+      await dbReal.ref(`users/${auth.currentUser.uid}`).once('value').then((snap) => {
+        userData = snap.val();
+      })
         .catch((err) => {
-            // eslint-disable-next-line
-            alert(`opps ${err.message}`);
-            return null;
+          // eslint-disable-next-line
+          alert(`opps ${err.message}`);
+          return null;
         });
-        this.user = userData;
-      },
+      this.user = userData;
+    },
   },
-  created(){
-      this.getUserData();
+  created() {
+    this.getUserData();
   },
 };
 </script>
@@ -99,7 +100,6 @@ body,html{height:100%; width: 100%;}
 .box-data{
     display: flex;
     flex-direction: row;
-    
 }
 div.title{
     min-width: 100px;

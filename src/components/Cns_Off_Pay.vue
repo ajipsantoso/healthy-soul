@@ -103,7 +103,7 @@
 
 <script>
 // @ is an alias to /src
-import {auth, db_real} from '../firebase/firebaseInit';
+import {auth, dbReal} from '../firebase/firebaseInit';
 export default {
   
   name: 'consul-off-pay',
@@ -125,90 +125,91 @@ export default {
     goConsul(){
         this.$router.push({ path: '/consul-off' });
     },
-    setTanggal(){
-          const monthNames = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-          ];
-          let result= new Date();
-          result.setDate(result.getDate() + 2);
-        //   console.log(result.getDate());
-          let hasil=
-          `${result.getDate()} ${monthNames[result.getMonth()]} ${result.getFullYear()} ${result.getHours()}:${result.getMinutes()}`
-          return hasil; 
+    setTanggal() {
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
+      ];
+      const result = new Date();
+      result.setDate(result.getDate() + 2);
+      const hasil = `${result.getDate()} ${monthNames[result.getMonth()]} ${result.getFullYear()} ${result.getHours()}:${result.getMinutes()}`;
+      return hasil;
     },
-    async paynow(){
+    async paynow() {
+      this.choose = false;
+      let count = null;
+      await dbReal.ref(`/users/${auth.currentUser.uid}`).once('value').then((s) => {
+        count = s.val().reservasi;
+      });
+      await dbReal.ref('reservasi/').push().set({
+        uid: auth.currentUser.uid,
+        dokter: this.consul.doctor,
+        waktu: this.consul.time,
+        biaya: this.biaya,
+        nama: auth.currentUser.displayName,
+        date: this.tanggal,
+        timespan: new Date().getTime(),
+        gateway: this.gate_pay,
+        status: 'wait',
+      }).catch((err) => {
+        // eslint-disable-next-line
+        alert('opps', err.message);
+        return null;
+      });
+      await dbReal.ref(`users/${auth.currentUser.uid}`).update({
+        reservasi: count + 1,
+      }).catch((err) => {
+        // eslint-disable-next-line
+        alert('opps', err.message);
+        return null;
+      });
+    },
+    async expireT() {
+      await dbReal.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1)
+        .once('value')
+        .then((s) => {
+          s.forEach(async (childSnapshot) => {
+            await dbReal.ref(`reservasi/${childSnapshot.key}`).update({
+              status: 'expire',
+            }).catch((err) => {
+              // eslint-disable-next-line
+              alert('opps', err.message);
+              return null;
+            });
+          });
+        });
+    },
+    async checkStatus() {
+      let dataTrans;
+      await dbReal.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1)
+        .once('value')
+        .then((s) => {
+          s.forEach(async (childSnapshot) => {
+            const child = childSnapshot.val();
+            if (child.status === 'wait') {
+              dataTrans = child;
+            } else if (child.status === 'accept') {
+              dataTrans = 'accept';
+            } else {
+              dataTrans = 'expire';
+            }
+          });
+        });
+      if (dataTrans === 'expire') {
         this.choose = false;
-        let count = null;
-        await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) => {
-            count = s.val().reservasi;
-        });
-        await db_real.ref('reservasi/').push().set({
-            uid : auth.currentUser.uid,
-            dokter : this.consul.doctor,
-            waktu : this.consul.time,
-            biaya : this.biaya,
-            nama : auth.currentUser.displayName,
-            date: this.tanggal,
-            timespan: new Date().getTime(),
-            gateway: this.gate_pay,
-            status: 'wait',
-        }).catch((err) => {
-            // eslint-disable-next-line
-            alert('opps', err.message);
-            return;
-        });
-        await db_real.ref('users/'+auth.currentUser.uid).update({
-            reservasi : count+1,
-        }).catch((err) => {
-            // eslint-disable-next-line
-            alert('opps', err.message);
-            return;
-        });
-        localStorage.setItem('transaksi', JSON.stringify({biaya:this.biaya, gate:this.gate_pay, tanggal:this.tanggal}));
-    },
-    async expireT(){
-        await db_real.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
-            s.forEach(async function(childSnapshot) {
-                await db_real.ref('reservasi/'+childSnapshot.key).update({
-                    status : 'expire',
-                }).catch((err) => {
-                    // eslint-disable-next-line
-                    alert('opps', err.message);
-                    return;
-                });
-            });
-        });
-    },
-    async checkStatus(){
-        let dataTrans;
-        await db_real.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
-            s.forEach(async function(childSnapshot) {
-                let child = childSnapshot.val();
-                if (child.status === 'wait') {
-                   dataTrans = child;
-                } else if (child.status === 'accept') {
-                    dataTrans = 'accept'
-                } else {
-                    dataTrans = 'expire'
-                }
-            });
-        });
-        if (dataTrans === 'expire'){
-          this.choose=false;
-          this.expire=true;
-        }else if(dataTrans === 'accept'){
-          this.choose=false;
-          this.expire=true;
-          this.noTransaction=true;
-        }else{
-          this.choose = false;
-          this.biaya = dataTrans.biaya;
-          this.gate_pay = dataTrans.gate;
-          this.tanggal = dataTrans.tanggal;
-        }
+        this.expire = true;
+      } else if (dataTrans === 'accept') {
+        this.choose = false;
+        this.expire = true;
+        this.noTransaction = true;
+      } else {
+        this.choose = false;
+        this.biaya = dataTrans.biaya;
+        this.gate_pay = dataTrans.gate;
+        this.tanggal = dataTrans.tanggal;
+      }
     },
   },
-  created(){
+  created() {
     // if (localStorage.transaksi){
     //     let data = JSON.parse(localStorage.getItem('transaksi'));
     //     let dateNow = new Date();
@@ -225,15 +226,15 @@ export default {
     //         this.tanggal = data.tanggal;
     //     }
     // }else{
-        if(this.consul){
-          this.tanggal = this.setTanggal();
-          let satuan = Math.floor(Math.random() * 10);
-          let puluh = Math.floor(Math.random() * 10)*10;
-          let ratus = Math.floor(Math.random() * 10)*100;
-          this.biaya = (500000 + ratus + puluh + satuan).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
-        }else{
-          this.checkStatus();
-        }
+    if (this.consul) {
+      this.tanggal = this.setTanggal();
+      const satuan = Math.floor(Math.random() * 10);
+      const puluh = Math.floor(Math.random() * 10) * 10;
+      const ratus = Math.floor(Math.random() * 10) * 100;
+      this.biaya = (500000 + ratus + puluh + satuan).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+    } else {
+      this.checkStatus();
+    }
     // }
   },
 };
@@ -301,7 +302,6 @@ span.title{
     margin-top: 30px;
 }
 .box_footer{
-    
     display: flex;
     justify-content: center;
     align-items: center;

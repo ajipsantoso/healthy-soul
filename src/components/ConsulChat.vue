@@ -115,7 +115,7 @@
 
 <script>
 // @ is an alias to /src
-import { auth, db, db_real } from '@/firebase/firebaseInit';
+import { auth, db, dbReal } from '@/firebase/firebaseInit';
 
 export default {
   name: 'consulchat',
@@ -131,18 +131,19 @@ export default {
     chooseDoctor: true,
   }),
   methods: {
-    docUser(selected){
-      this.chooseDoctor=false;
-      this.selectedUser=selected;
+    docUser(selected) {
+      this.chooseDoctor = false;
+      this.selectedUser = selected;
       this.fetchMessage(selected);
-    }, 
-    async saveMessage(){
+    },
+    async saveMessage() {
       let docName;
-      await db_real.ref('users/').orderByChild('email').equalTo(this.selectedUser).once('value').then((s) => {
-        s.forEach(function(data) {
-            docName=data.val().nama
+      await dbReal.ref('users/').orderByChild('email').equalTo(this.selectedUser).once('value')
+        .then((s) => {
+          s.forEach((data) => {
+            docName = data.val().nama;
+          });
         });
-      });
       db.collection('chat').add({
         message: this.message,
         time: new Date(),
@@ -153,51 +154,62 @@ export default {
       });
       this.message = null;
     },
-    sortMessage(msg,status) {
+    sortMessage(msg, status) {
       this.sorted = [];
       for (let i = 0; i < msg.length; i += 1) {
         if (msg[i].author === this.authUser.email || msg[i].sendto === this.authUser.email) {
-            let found = false;
-            for (let j = 0; j < this.sorted.length; j += 1) {
-              if ((this.sorted[j].chatUser === msg[i].author
-              && msg[i].author !== this.authUser.email)
-                || (this.sorted[j].chatUser === msg[i].sendto
-                && msg[i].sendto !== this.authUser.email)) {
-                console.log(this.sorted)
-                this.sorted[j].chat.push(msg[i]);
-                found = true;
-              }
+          let found = false;
+          for (let j = 0; j < this.sorted.length; j += 1) {
+            if ((this.sorted[j].chatUser === msg[i].author
+            && msg[i].author !== this.authUser.email)
+              || (this.sorted[j].chatUser === msg[i].sendto
+              && msg[i].sendto !== this.authUser.email)) {
+              console.log(this.sorted);
+              this.sorted[j].chat.push(msg[i]);
+              found = true;
             }
-            if (found === false) {
-              if (msg[i].author !== this.authUser.email) {
-                if(status==='admin'){
-                  this.sorted.push({ userName:msg[i].authorName, chatUser: msg[i].author, chat: [msg[i]],});
-                }
-                else{
-                  this.sorted.push({ userName:msg[i].sendtoName, chatUser: msg[i].sendto, chat: [msg[i]],});
-                }
+          }
+          if (found === false) {
+            if (msg[i].author !== this.authUser.email) {
+              if (status === 'admin') {
+                this.sorted.push({
+                  userName: msg[i].authorName,
+                  chatUser: msg[i].author,
+                  chat: [msg[i]],
+                });
               } else {
-                if(status==='admin'){
-                  this.sorted.push({ userName:msg[i].authorName, chatUser: msg[i].author, chat: [msg[i]],});
-                }
-                else{
-                  this.sorted.push({ userName:msg[i].sendtoName, chatUser: msg[i].sendto, chat: [msg[i]],});
-                }
+                this.sorted.push({
+                  userName: msg[i].sendtoName,
+                  chatUser: msg[i].sendto,
+                  chat: [msg[i]],
+                });
               }
+            } else if (status === 'admin') {
+              this.sorted.push({
+                userName: msg[i].authorName,
+                chatUser: msg[i].author,
+                chat: [msg[i]],
+              });
+            } else {
+              this.sorted.push({
+                userName: msg[i].sendtoName,
+                chatUser: msg[i].sendto,
+                chat: [msg[i]],
+              });
             }
+          }
         }
       }
-      if (this.selectedUser === null){
-        if(this.chooseDoctor === false){
-          if (this.sorted.length > 0){
+      if (this.selectedUser === null) {
+        if (this.chooseDoctor === false) {
+          if (this.sorted.length > 0) {
             this.selectedUser = this.sorted[0].chatUser;
-          }
-          else{
+          } else {
             this.disableChat = true;
           }
         }
-      }else if (this.selectedUser && this.sorted.length == 0) {
-        this.sorted.push({userName: this.selectedUser==='admin@admin.com' ? 'Jager Manjensen':'John Doe', chatUser: this.selectedUser,})
+      } else if (this.selectedUser && this.sorted.length === 0) {
+        this.sorted.push({ userName: this.selectedUser === 'admin@admin.com' ? 'Jager Manjensen' : 'John Doe', chatUser: this.selectedUser });
       }
     },
     fetchMessageAdmin() {
@@ -208,7 +220,7 @@ export default {
             allMessage.push(doc.data());
           });
           this.messages = allMessage;
-          this.sortMessage(allMessage,'admin');
+          this.sortMessage(allMessage, 'admin');
           allMessage = [];
         });
     },
@@ -222,22 +234,22 @@ export default {
             }
           });
           this.messages = allMessage;
-          this.sortMessage(allMessage,'user');
+          this.sortMessage(allMessage, 'user');
           allMessage = [];
         });
     },
-    async checkUser(){
-      let status=null;
-      await db_real.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
-          status = s.val().status;
-      })
-      if ( status === 'admin'){
+    async checkUser() {
+      let stats = null;
+      await dbReal.ref(`/users/${auth.currentUser.uid}`).once('value').then((s) => {
+        stats = s.val().status;
+      });
+      if (stats === 'admin') {
         this.chooseDoctor = false;
         this.fetchMessageAdmin();
-      }else{
+      } else {
         this.chooseDoctor = true;
       }
-    }
+    },
   },
   created() {
     auth.onAuthStateChanged((user) => {
@@ -344,7 +356,7 @@ img{ max-width:100%;}
   display: flex;
   align-items: center;
 }
-.chat_people{ 
+.chat_people{
   overflow:auto; clear:both;
   display: flex;
   flex-direction: row;
@@ -425,9 +437,8 @@ img{ max-width:100%;}
   top: 11px;
   width: 33px;
 }
-.messaging { 
+.messaging {
   padding: 0 0 50px 0;
-  
 }
 .msg_history {
   height: 516px;
