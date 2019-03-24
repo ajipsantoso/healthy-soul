@@ -1,8 +1,8 @@
 export default {
-  authDomain: 'chattingapp-454b2.firebaseapp.com',
-  databaseURL: 'https://chattingapp-454b2.firebaseio.com',
-  projectId: 'chattingapp-454b2',
-  storageBucket: 'chattingapp-454b2.appspot.com',
-  messagingSenderId: '385443720274',
-  apiKey: 'AIzaSyCvCrBngCOCScrEadPT6HQwK9gw_PsPjoM',
+  apiKey: 'AIzaSyA2UbtFmurdd6135YZzhGpIDUdHhE4katE',
+  authDomain: 'healtysoul-a3f73.firebaseapp.com',
+  databaseURL: 'https://healtysoul-a3f73.firebaseio.com',
+  projectId: 'healtysoul-a3f73',
+  storageBucket: 'healtysoul-a3f73.appspot.com',
+  messagingSenderId: '772580633101',
 };
