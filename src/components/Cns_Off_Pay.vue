@@ -14,32 +14,32 @@
                                         <div class="label-desc">
                                             <h5>Alfamart</h5>
                                         </div>
-                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
-                                type="radio" name="gridGate" id="gate1"
-                                value="Alfamart">
+                                        <input @change="paynow"
+                                        class="form-check-input" v-model="gate_pay"
+                                        type="radio" name="gridGate" id="gate1"
+                                        value="Alfamart">
                                 </label>
                             </div>
-                            
                             <div class="box_data">
-                                
                                 <label class="form-check-label time" for="gate2">
                                         <div class="label-desc">
                                             <h5>Indomaret</h5>
                                         </div>
-                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
-                                type="radio" name="gridGate" id="gate2"
-                                value="Indomaret">
+                                        <input @change="paynow"
+                                        class="form-check-input" v-model="gate_pay"
+                                        type="radio" name="gridGate" id="gate2"
+                                        value="Indomaret">
                                 </label>
                             </div>
                             <div class="box_data">
-                                
                                 <label class="form-check-label time" for="gate3">
                                         <div class="label-desc">
                                             <h5>Mandiri</h5>
                                         </div>
-                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
-                                type="radio" name="gridGate" id="gate3"
-                                value="Mandiri">
+                                        <input @change="paynow"
+                                        class="form-check-input" v-model="gate_pay"
+                                        type="radio" name="gridGate" id="gate3"
+                                        value="Mandiri">
                                 </label>
                             </div>
                             <div class="box_data">
@@ -47,9 +47,11 @@
                                         <div class="label-desc">
                                             <h5>BCA</h5>
                                         </div>
-                                        <input @change="paynow" class="form-check-input" v-model="gate_pay"
-                                type="radio" name="gridGate" id="gate4"
-                                value="BCA">
+                                        <input @change="paynow"
+                                        class="form-check-input"
+                                        v-model="gate_pay"
+                                        type="radio" name="gridGate" id="gate4"
+                                        value="BCA">
                                 </label>
                             </div>
                         </div>
@@ -58,8 +60,8 @@
             </div>
             <div class="box" v-else>
                 <div class="box_title">
-                    <span class="title">Instruksi Pembayaran</span>
-                    <span class="title">Transfer tepat sesuai nominal berikut</span>
+                    <span class="title">PAYMENT</span>
+                    <span class="title">Pay exactly according to the following amount</span>
                     <span class="title biaya">Rp {{biaya}}</span>
                 </div>
                 <div class="box_content">
@@ -68,18 +70,19 @@
                             <font-awesome-icon icon="exclamation-circle" size="2x"/>
                         </div>
                         <div class="notif_desc">
-                            <span>PENTING! Mohon transfer tepat sampai 3 angka</span>
-                            <span>terakhir agar pembayaran Anda dapat diproses</span>
+                            <span>IMPORTANT! Please transfer up to 3 last digits</span>
+                            <span>so that your payment can be prosess</span>
                         </div>
                     </div>
                     <div class="box_content">
-                        <span v-if="gate_pay=='Indomaret'||gate_pay=='Alfamart'">Kode pembayaran : </span>
-                        <span v-else>Transfer ke rekening a/n <b>PT. Healthy Soul</b> berikut ini : </span>
+                        <span v-if="gate_pay=='Indomaret'
+                        || gate_pay=='Alfamart'">Payment code :</span>
+                        <span v-else>Please transfer to a/n <b>PT. Healthy Soul</b> :</span>
                         <h4 class="rekening">111 222 333 44455</h4>
                     </div>
                     <div class="box_footer">
-                        <span>Bayar sebelum <b>{{`${tanggal} WIB`}}</b> atau</span>
-                        <span>tiket Anda dibatalkan oleh sistem.</span>
+                        <span>Pay before <b>{{`${tanggal} WIB`}}</b></span>
+                        <span>or your order is automatically cancelled by the system</span>
                     </div>
                 </div>
             </div>
@@ -95,7 +98,6 @@
                 <button @click="goConsul"
                 class="btn btn-primary">New Transaction
                 </button>
-                
             </div>
         </div>
     </div>
@@ -103,31 +105,28 @@
 
 <script>
 // @ is an alias to /src
-import {auth, dbReal} from '../firebase/firebaseInit';
+import { auth, dbReal } from '../firebase/firebaseInit';
+
 export default {
-  
   name: 'consul-off-pay',
   props: ['consul'],
   components: {
   },
   data: () => ({
-      biaya: '',
-      gate_pay: '',
-      choose: true,
-      tanggal: '',
-      expire: false,
-      noTransaction: false,
+    biaya: '',
+    gate_pay: '',
+    choose: true,
+    tanggal: '',
+    expire: false,
+    noTransaction: false,
   }),
-  computed:{
-      
-  },
   methods: {
-    goConsul(){
-        this.$router.push({ path: '/consul-off' });
+    goConsul() {
+      this.$router.push({ path: '/consul-off' });
     },
     setTanggal() {
-      const monthNames = ["January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December",
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December',
       ];
       const result = new Date();
       result.setDate(result.getDate() + 2);

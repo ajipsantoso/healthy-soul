@@ -8,7 +8,8 @@
                                 src="@/assets/Mask_Group_1.png" alt="Card image cap">
                                 <div class="card-body">
                                 <h4 class="card-title">Consultation</h4>
-                                <p class="card-text">Consult your anxiety with the best experts here.</p>
+                                <p class="card-text">
+                                  Consult your anxiety with the best experts here.</p>
                                 <button @click="goConsul"
                                 class="btn btn-primary">Learn More</button>
                                 </div>
@@ -18,7 +19,7 @@
                                 src="@/assets/Mask_Group_2.png" alt="Card image cap">
                                 <div class="card-body">
                                 <h4 class="card-title">Find Your Career</h4>
-                                <p class="card-text">Need to find your career path? 
+                                <p class="card-text">Need to find your career path?
                                   Try this for free now.</p>
                                 <button @click="goCareer"
                                 class="btn btn-primary">Learn More</button>
@@ -29,7 +30,8 @@
                                 src="@/assets/Mask_Group_3.png" alt="Card image cap">
                                 <div class="card-body">
                                 <h4 class="card-title">Find Your College Majors</h4>
-                                <p class="card-text">After graduated from high school where are you going? 
+                                <p class="card-text">
+                                  After graduated from high school where are you going?
                                   Find it here.
                                 </p>
                                 <button @click="goCollege"
@@ -54,24 +56,24 @@
 
 <script>
 // @ is an alias to /src
-import { auth, dbReal } from '../firebase/firebaseInit.js'
+import { auth, dbReal } from '../firebase/firebaseInit';
+
 export default {
   name: 'dashboard',
-  data: () =>({
+  data: () => ({
     on_user: false,
   }),
   components: {
   },
   async created() {
-    let status=null;
-    await dbReal.ref('/users/'+auth.currentUser.uid).once('value').then((s) =>{
-        status = s.val().status;
-    })
-    if ( status === 'admin'){
+    let stats = null;
+    await dbReal.ref(`/users/${auth.currentUser.uid}`).once('value').then((s) => {
+      stats = s.val().status;
+    });
+    if (stats === 'admin') {
       this.goAdmin();
-    }
-    else{
-      this.on_user=true;
+    } else {
+      this.on_user = true;
       if (this.$router.currentRoute.name === 'dashboard') {
         this.goDashboard();
       } else if (this.$router.currentRoute.name === 'consultation') {

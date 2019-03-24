@@ -100,7 +100,7 @@
                     <h3>{{ this.answer }}</h3>
                 </div>
                 <div class="form-submit">
-                    <button @click="getAns" type="button" class="btn btn-primary">Primary</button>
+                    <button @click="getAns" type="button" class="btn btn-primary">Check</button>
                 </div>
             </div>
         </div>

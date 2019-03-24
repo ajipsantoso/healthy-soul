@@ -184,18 +184,6 @@ export default {
                   chat: [msg[i]],
                 });
               }
-            } else if (status === 'admin') {
-              this.sorted.push({
-                userName: msg[i].authorName,
-                chatUser: msg[i].author,
-                chat: [msg[i]],
-              });
-            } else {
-              this.sorted.push({
-                userName: msg[i].sendtoName,
-                chatUser: msg[i].sendto,
-                chat: [msg[i]],
-              });
             }
           }
         }
@@ -206,6 +194,7 @@ export default {
             this.selectedUser = this.sorted[0].chatUser;
           } else {
             this.disableChat = true;
+            this.sorted.push({ userName: 'No User Found', chatUser: 'nouser' });
           }
         }
       } else if (this.selectedUser && this.sorted.length === 0) {
@@ -229,7 +218,8 @@ export default {
         .onSnapshot((querySanpshot) => {
           let allMessage = [];
           querySanpshot.forEach((doc) => {
-            if (doc.data().sendto === user || doc.data().author === user) {
+            if ((doc.data().sendto === auth.currentUser.email && doc.data().author === user)
+            || (doc.data().sendto === user && doc.data().author === auth.currentUser.email)) {
               allMessage.push(doc.data());
             }
           });

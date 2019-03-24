@@ -5,19 +5,19 @@
                     <div class="card-deck">
                             <div @click="goConsulChat('off')"
                             class="card bg-light text-white ">
-                                    <img class="img-fluid card-img"
-                                    src="@/assets/consul_1.png" alt="Card image">
-                                    <div class="card-img-overlay">
-                                        <h3 class="card-title">Offline Consultation</h3>
-                                    </div>
+                              <img class="img-fluid card-img"
+                              src="@/assets/consul_1.png" alt="Card image">
+                              <div class="card-img-overlay">
+                                  <h3 class="card-title">Offline Consultation</h3>
+                              </div>
                             </div>
                             <div @click="goConsulChat('on')"
                             class="card bg-light text-white">
-                                    <img class="img-fluid card-img"
-                                    src="@/assets/consul_2.png" alt="Card image">
-                                    <div class="card-img-overlay">
-                                      <h3 class="card-title">Online Consultation</h3>
-                                    </div>
+                              <img class="img-fluid card-img"
+                              src="@/assets/consul_2.png" alt="Card image">
+                              <div class="card-img-overlay">
+                                <h3 class="card-title">Online Consultation</h3>
+                              </div>
                             </div>
                     </div>
             </div>

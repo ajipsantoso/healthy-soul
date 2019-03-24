@@ -110,7 +110,9 @@
                             <b>TOTAL PAYMENT : <span>Rp. 500.000</span></b>
                         </div>
                 <div class="form-submit">
-                    <button @click="onPayment" type="button" class="btn btn-primary">PAYMENT</button>
+                    <button @click="onPayment"
+                    type="button"
+                    class="btn btn-primary">PAYMENT</button>
                 </div>
             </div>
         </div>
@@ -119,7 +121,8 @@
 
 <script>
 // @ is an alias to /src
-import { dbReal } from '../firebase/firebaseInit';
+import { auth, dbReal } from '../firebase/firebaseInit';
+
 export default {
   name: 'consul-off',
   components: {
@@ -132,23 +135,25 @@ export default {
       },
   }),
   methods: {
-    onPayment(){
-        if (doctor && time){
-          this.$router.push({ name: 'consul-off-bayar', params:{consul: this.consul_data}});
-        }
+    onPayment() {
+      if (this.doctor && this.time) {
+        this.$router.push({ name: 'consul-off-bayar', params: { consul: this.consul_data } });
+      }
     },
-    async checkTrans(){
-      await dbReal.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1).once('value').then((s) => {
-        s.forEach(async function(childSnapshot) {
-          let child = childSnapshot.val();
-          if (child.status === 'wait') {
-            this.$router.push({ name: 'consul-off-bayar'});
-          }
+    async checkTrans() {
+      await dbReal.ref('reservasi/').orderByChild('uid').equalTo(auth.currentUser.uid).limitToLast(1)
+        .once('value')
+        .then((s) => {
+          s.forEach(async (childSnapshot) => {
+            const child = childSnapshot.val();
+            if (child.status === 'wait') {
+              this.$router.push({ name: 'consul-off-bayar' });
+            }
+          });
         });
-      });
     },
   },
-  created(){
+  created() {
     this.checkTrans();
   },
 };
