@@ -192,6 +192,7 @@ export default {
       if (this.selectedUser === null) {
         if (this.chooseDoctor === false) {
           if (this.sorted.length > 0) {
+            this.disableChat = false;
             this.selectedUser = this.sorted[0].chatUser;
           } else {
             this.disableChat = true;
