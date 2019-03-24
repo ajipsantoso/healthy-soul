@@ -136,7 +136,7 @@ export default {
   }),
   methods: {
     onPayment() {
-      if (this.doctor && this.time) {
+      if (this.consul_data.doctor && this.consul_data.time) {
         this.$router.push({ name: 'consul-off-bayar', params: { consul: this.consul_data } });
       }
     },
