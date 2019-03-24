@@ -182,12 +182,10 @@ export default {
   }),
   methods: {
     async registerUser() {
-      console.log(this.file);
       const storageRef = storage.ref('image/');
       const uploadImgref = storageRef.child(`${this.username}${this.file[0].name}`);
       let imgurl = null;
-      await uploadImgref.put(this.file[0]).then((snapshot) => {
-        console.log(snapshot.ref.location);
+      await uploadImgref.put(this.file[0]).then(() => {
         uploadImgref.getDownloadURL().then((url) => {
           imgurl = url;
         }).catch((err) => {

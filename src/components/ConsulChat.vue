@@ -10,16 +10,6 @@
                             <div class="recent_heading">
                             <h4>Recent</h4>
                             </div>
-                            <!-- <div class="srch_bar">
-                                <div class="stylish-input-group">
-                                    <input type="text" class="search-bar" placeholder="Search" >
-                                    <span class="input-group-addon">
-                                    <button type="button">
-                                        <font-awesome-icon icon="search"/>
-                                    </button>
-                                    </span>
-                                </div>
-                            </div> -->
                         </div>
                         <div class="inbox_chat">
                             <div v-for="(chat_person, idx_prsn) in sorted"
@@ -87,7 +77,7 @@
       </div>
       <div class="box" v-else>
         <div class="box_title">
-          Who do you want to cunsult with?
+          Who do you want to consult with?
         </div>
         <div class="box_content">
           <div @click="docUser('admin@admin.com')" class="form-check-label doctor">
@@ -164,7 +154,6 @@ export default {
             && msg[i].author !== this.authUser.email)
               || (this.sorted[j].chatUser === msg[i].sendto
               && msg[i].sendto !== this.authUser.email)) {
-              console.log(this.sorted);
               this.sorted[j].chat.push(msg[i]);
               found = true;
             }
@@ -184,6 +173,18 @@ export default {
                   chat: [msg[i]],
                 });
               }
+            } else if (status === 'admin') {
+              this.sorted.push({
+                userName: msg[i].authorName,
+                chatUser: msg[i].author,
+                chat: [msg[i]],
+              });
+            } else {
+              this.sorted.push({
+                userName: msg[i].sendtoName,
+                chatUser: msg[i].sendto,
+                chat: [msg[i]],
+              });
             }
           }
         }
